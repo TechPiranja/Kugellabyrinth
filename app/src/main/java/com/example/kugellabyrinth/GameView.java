@@ -18,7 +18,7 @@ public class GameView extends View{
 
     Context context;
     private Paint wallPaint;
-    private int COLS = 20, ROWS = 20;
+    private int COLS = 22, ROWS = 22;
     private int hMargin, vMargin;
     private int cellSize;
     private Rect r;
@@ -29,7 +29,6 @@ public class GameView extends View{
         this.context =context;
         wallPaint = new Paint();
         wallPaint.setColor(Color.BLACK);
-        r = new Rect(100, 500, 100, 100);
     }
 
     @Override
@@ -58,19 +57,19 @@ public class GameView extends View{
         hMargin = (width-COLS*cellSize)/2;
         vMargin = (height-ROWS*cellSize)/2;
         canvas.translate(hMargin, vMargin);
-
         char[] chars = maze.toCharArray();
         int y = 0;
         int x = 0;
         for (int i = 0; i < chars.length; i++, x++){
             if(chars[i] == '#') {
-                canvas.drawRect(x*cellSize,y*cellSize,10,10, wallPaint);
+                canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, wallPaint);
                 Log.d("Hashtag", x + "," + y);
-            }
-
-            System.out.print(chars[i]);
-
-            if (chars[i] == '\n')
+            } else if(chars[i] == ' ') {
+                Paint space = new Paint();
+                space.setColor(Color.WHITE);
+                canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, space);
+                Log.d("Hashtag", x + "," + y);
+            } else if (chars[i] == '\n')
             {
                 System.out.print("Newline");
                 y++;

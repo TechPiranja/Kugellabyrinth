@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -22,8 +25,14 @@
             android:id="@+id/view"
             class="com.example.kugellabyrinth.GameView"
             android:layout_width="match_parent"
-            android:layout_height="663dp"
+            android:layout_height="463dp"
             android:baselineAligned="false" />
+
+        <fragment
+            android:id="@+id/fragment"
+            android:name="com.example.kugellabyrinth.GameFieldFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

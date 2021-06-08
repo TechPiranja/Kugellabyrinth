@@ -17,7 +17,6 @@ import java.io.InputStream;
 public class GameView extends View{
 
     Context context;
-
     private Paint wallPaint, spacePaint, playerPaint, startPaint, finishPaint;
     private int COLS = 21, ROWS = 21;
     private int hMargin, vMargin;
@@ -77,7 +76,7 @@ public class GameView extends View{
         for (int i = 0; i < chars.length; i++){
             if(chars[i] == '#') {
                 canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, wallPaint);
-                Log.d("Hashtag", x + "," + y);
+                //Log.d("Hashtag", x + "," + y);
             } else if(chars[i] == ' ') {
                 if (user.x == -1 && user.y == -1) {
                     user.x = x;
@@ -87,7 +86,7 @@ public class GameView extends View{
                     canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, spacePaint);
                 }
 
-                Log.d("Hashtag", x + "," + y);
+                //Log.d("Hashtag", x + "," + y);
             }
             x++;
 

@@ -17,10 +17,12 @@ import java.io.InputStream;
 public class GameView extends View{
 
     Context context;
-    private Paint wallPaint;
+
+    private Paint wallPaint, spacePaint, playerPaint, startPaint, finishPaint;
     private int COLS = 21, ROWS = 21;
     private int hMargin, vMargin;
     private int cellSize;
+    private Player user = new Player();
     private Rect r;
     private String maze;
 
@@ -29,6 +31,18 @@ public class GameView extends View{
         this.context =context;
         wallPaint = new Paint();
         wallPaint.setColor(Color.BLACK);
+
+        playerPaint = new Paint();
+        playerPaint.setColor(Color.RED);
+
+        startPaint = new Paint();
+        startPaint.setColor(Color.BLUE);
+
+        finishPaint = new Paint();
+        finishPaint.setColor(Color.GREEN);
+
+        spacePaint = new Paint();
+        spacePaint.setColor(Color.WHITE);
     }
 
     @Override
@@ -65,9 +79,14 @@ public class GameView extends View{
                 canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, wallPaint);
                 Log.d("Hashtag", x + "," + y);
             } else if(chars[i] == ' ') {
-                Paint space = new Paint();
-                space.setColor(Color.WHITE);
-                canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, space);
+                if (user.x == -1 && user.y == -1) {
+                    user.x = x;
+                    user.y = y;
+                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, playerPaint);
+                } else {
+                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, spacePaint);
+                }
+
                 Log.d("Hashtag", x + "," + y);
             }
             x++;

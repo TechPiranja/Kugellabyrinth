@@ -5,16 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 
-import androidx.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class GameView extends View{
+public class GameView extends View {
 
     Context context;
     private Paint wallPaint, spacePaint, playerPaint, startPaint, finishPaint;
@@ -25,9 +23,9 @@ public class GameView extends View{
     private Rect r;
     private String maze;
 
-    public GameView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        this.context =context;
+    public GameView(Context context) {
+        super(context);
+        this.context = context;
         wallPaint = new Paint();
         wallPaint.setColor(Color.BLACK);
 
@@ -44,8 +42,13 @@ public class GameView extends View{
         spacePaint.setColor(Color.WHITE);
     }
 
+    public void MyTest() {
+        System.out.println("Verbindung erfolgreich");
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         canvas.drawColor(Color.GRAY);
 
         try {

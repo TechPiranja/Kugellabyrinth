@@ -17,8 +17,8 @@ public class GameView extends View {
     private int hMargin, vMargin;
     private int cellSize;
     private Player user = new Player();
-    private Rect r;
-    private String maze;
+    private char[] maze;
+    private char[][] mazeArray;
 
     public GameView(Context context) {
         super(context);
@@ -37,22 +37,8 @@ public class GameView extends View {
 
         spacePaint = new Paint();
         spacePaint.setColor(Color.WHITE);
-    }
 
-    public void PlayerInput(float x, float y) {
-        if (x > 2.0f){
-            user.x = user.x + 1; // left
-        } else if (x < -2.0f) {
-            user.x = user.x - 1;// right
-        }
-        invalidate();
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        System.out.println("Ich male");
-        canvas.drawColor(Color.GRAY);
+        mazeArray = new char[COLS+2][ROWS+2];
 
         try {
             InputStream is = context.getAssets().open("mazeGen1.txt");
@@ -60,10 +46,53 @@ public class GameView extends View {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            maze = new String(buffer);
+            String mazeBuffer = new String(buffer);
+            maze = mazeBuffer.toCharArray();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        convertMaze();
+    }
+
+    private void convertMaze(){
+        int y = 0;
+        int x = 0;
+        for (int i = 0; i < maze.length; i++){
+            mazeArray[x][y] = maze[i];
+            x++;
+
+            if (maze[i] == '\n')
+            {
+                y++;
+                x = 0;
+            }
+        }
+    }
+
+    public void PlayerInput(float x, float y) {
+        if (y > 1f && user.y <= ROWS-2 && mazeArray[(int) user.x][(int) user.y+1] == ' '){
+            user.y = user.y + 1;
+            invalidate();
+        } else if (y < -1f && user.y > 1 && mazeArray[(int) user.x][(int) user.y-1] == ' ') {
+            user.y = user.y - 1;
+            invalidate();
+        }
+
+        if (x < 1f && user.x <= COLS-2 && mazeArray[(int) user.x+1][(int) user.y] == ' '){
+            user.x = user.x + 1;
+            invalidate();
+        } else if (x > -1f && user.x > 1 && mazeArray[(int) user.x-1][(int) user.y] == ' ') {
+            user.x = user.x - 1;
+            invalidate();
+        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        System.out.println("Ich male");
+        canvas.drawColor(Color.GRAY);
 
         int width = getWidth();
         int height = getHeight();
@@ -76,27 +105,17 @@ public class GameView extends View {
         hMargin = (width-COLS*cellSize)/2;
         vMargin = (height-ROWS*cellSize)/2;
         canvas.translate(hMargin, vMargin);
-        char[] chars = maze.toCharArray();
-        int y = 0;
-        int x = 0;
-        for (int i = 0; i < chars.length; i++){
-            if(chars[i] == '#') {
-                canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, wallPaint);
-                //Log.d("Hashtag", x + "," + y);
-            } else if(chars[i] == ' ') {
-                canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, spacePaint);
-                //Log.d("Hashtag", x + "," + y);
-            }
-            x++;
-            System.out.println(user.x + " " + user.y);
-            canvas.drawRect(user.x*cellSize,user.y*cellSize,(user.x+1)*cellSize,(user.y+1)*cellSize, playerPaint);
 
-            if (chars[i] == '\n')
-            {
-                System.out.print("Newline");
-                y++;
-                x = 0;
+        for (int x = 0; x < mazeArray.length; x++){
+            for (int y = 0; y < mazeArray[x].length; y++) {
+                if(mazeArray[x][y] == '#') {
+                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, wallPaint);
+                } else if(mazeArray[x][y] == ' ') {
+                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, spacePaint);
+                }
             }
         }
+
+        canvas.drawRect(user.x*cellSize,user.y*cellSize,(user.x+1)*cellSize,(user.y+1)*cellSize, playerPaint);
     }
 }

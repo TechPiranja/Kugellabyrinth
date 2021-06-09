@@ -6,9 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.View;
-import android.widget.RelativeLayout;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -42,13 +39,19 @@ public class GameView extends View {
         spacePaint.setColor(Color.WHITE);
     }
 
-    public void MyTest() {
-        System.out.println("Verbindung erfolgreich");
+    public void PlayerInput(float x, float y) {
+        if (x > 2.0f){
+            user.x = user.x + 1; // left
+        } else if (x < -2.0f) {
+            user.x = user.x - 1;// right
+        }
+        invalidate();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        System.out.println("Ich male");
         canvas.drawColor(Color.GRAY);
 
         try {
@@ -81,17 +84,12 @@ public class GameView extends View {
                 canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, wallPaint);
                 //Log.d("Hashtag", x + "," + y);
             } else if(chars[i] == ' ') {
-                if (user.x == -1 && user.y == -1) {
-                    user.x = x;
-                    user.y = y;
-                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, playerPaint);
-                } else {
-                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, spacePaint);
-                }
-
+                canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, spacePaint);
                 //Log.d("Hashtag", x + "," + y);
             }
             x++;
+            System.out.println(user.x + " " + user.y);
+            canvas.drawRect(user.x*cellSize,user.y*cellSize,(user.x+1)*cellSize,(user.y+1)*cellSize, playerPaint);
 
             if (chars[i] == '\n')
             {

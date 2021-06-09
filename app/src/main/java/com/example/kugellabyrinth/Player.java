@@ -1,6 +1,6 @@
 package com.example.kugellabyrinth;
 
 public class Player {
-    int x = -1;
-    int y = -1;
+    public int x = -1;
+    public int y = -1;
 }

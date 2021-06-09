@@ -20,12 +20,7 @@ public class GameFieldFragment extends Fragment {
 
             @Override
             public void onTranslation(float tx, float ty, float tz) {
-                if (tx > 1.0f){
-                    System.out.println("GAME: its turning left" + tx);
-                    gameView.MyTest();
-                } else if (tx < -1.0f) {
-                    System.out.println("GAME: its turning right" + tx);
-                }
+                gameView.PlayerInput(tx, ty);
             }
         });
         return gameView;

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 public class GameFieldFragment extends Fragment {
 
-    private Gyroscope gyroscope;
     private GameView gameView;
     SensorManager mSensorManager;
     Accelerometer accelerometer;
@@ -20,12 +19,8 @@ public class GameFieldFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         gameView = new GameView(getActivity());
-
-
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         accelerometer = new Accelerometer() {
-
-
             @Override
             public void onAccelerationChange(float x, float y) {
                 gameView.PlayerInput(x, y);

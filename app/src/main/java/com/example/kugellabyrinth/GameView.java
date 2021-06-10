@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.View;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +38,11 @@ public class GameView extends View {
         spacePaint.setColor(Color.WHITE);
 
         mazeArray = new char[COLS+2][ROWS+2];
+        readMaze();
+        convertMaze();
+    }
 
+    private void readMaze() {
         try {
             InputStream is = context.getAssets().open("mazeGen1.txt");
             int size = is.available();
@@ -51,8 +54,6 @@ public class GameView extends View {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        convertMaze();
     }
 
     private void convertMaze(){
@@ -91,7 +92,6 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        System.out.println("Ich male");
         canvas.drawColor(Color.GRAY);
 
         int width = getWidth();
@@ -106,6 +106,7 @@ public class GameView extends View {
         vMargin = (height-ROWS*cellSize)/2;
         canvas.translate(hMargin, vMargin);
 
+        // draw maze
         for (int x = 0; x < mazeArray.length; x++){
             for (int y = 0; y < mazeArray[x].length; y++) {
                 if(mazeArray[x][y] == '#') {
@@ -116,6 +117,7 @@ public class GameView extends View {
             }
         }
 
+        // draw player
         canvas.drawRect(user.x*cellSize,user.y*cellSize,(user.x+1)*cellSize,(user.y+1)*cellSize, playerPaint);
     }
 }

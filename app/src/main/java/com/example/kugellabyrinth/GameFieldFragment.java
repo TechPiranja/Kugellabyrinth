@@ -21,11 +21,8 @@ public class GameFieldFragment extends Fragment {
     public void onAttach(Activity activity)
     {
         super.onAttach(activity);
-        if(activity instanceof EventListener) {
+        if(activity instanceof EventListener)
             listener = (EventListener)activity;
-        } else {
-            // Throw an error!
-        }
     }
 
     @Override

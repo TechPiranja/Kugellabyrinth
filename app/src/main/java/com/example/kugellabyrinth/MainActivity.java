@@ -1,5 +1,6 @@
 package com.example.kugellabyrinth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,14 +29,20 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         }
     };
 
-    public void StartTimer(){
+    public void StartTimer() {
         timerStarted = true;
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
     }
 
-    public void StopTimer(){
+    public void StopTimer() {
         timerHandler.removeCallbacks(timerRunnable);
+        OpenScoreboard();
+    }
+
+    public void OpenScoreboard() {
+        Intent intent = new Intent(this, ScoreboardActivity.class);
+        startActivity(intent);
     }
 
     @Override

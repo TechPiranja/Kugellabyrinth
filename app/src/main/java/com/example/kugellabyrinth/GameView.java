@@ -15,7 +15,7 @@ public class GameView extends View {
     private int COLS = 21, ROWS = 21;
     private int hMargin, vMargin;
     private int cellSize;
-    private Player user = new Player();
+    public Player user = new Player();
     private char[] maze;
     private char[][] mazeArray;
 

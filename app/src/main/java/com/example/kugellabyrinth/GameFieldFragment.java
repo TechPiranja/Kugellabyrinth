@@ -1,5 +1,6 @@
 package com.example.kugellabyrinth;
 
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -14,6 +15,18 @@ public class GameFieldFragment extends Fragment {
     private GameView gameView;
     SensorManager mSensorManager;
     Accelerometer accelerometer;
+    private EventListener listener;
+
+    @Override
+    public void onAttach(Activity activity)
+    {
+        super.onAttach(activity);
+        if(activity instanceof EventListener) {
+            listener = (EventListener)activity;
+        } else {
+            // Throw an error!
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -23,6 +36,10 @@ public class GameFieldFragment extends Fragment {
         accelerometer = new Accelerometer() {
             @Override
             public void onAccelerationChange(float x, float y) {
+                if (gameView.user.x != 0 && gameView.user.y != 0)
+                    listener.sendDataToActivity("Start-Timer");
+                if (gameView.user.x == 19 && gameView.user.y == 20)
+                    listener.sendDataToActivity("Stop-Timer");
                 gameView.PlayerInput(x, y);
             }
         };

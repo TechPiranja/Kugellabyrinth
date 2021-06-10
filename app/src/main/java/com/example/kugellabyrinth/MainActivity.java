@@ -1,20 +1,27 @@
 package com.example.kugellabyrinth;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements EventListener{
 
     TextView timerTextView;
     Handler timerHandler = new Handler();
     Boolean timerStarted = false;
+    String timeSpent;
     long startTime = 0;
 
     Runnable timerRunnable = new Runnable() {
@@ -24,7 +31,8 @@ public class MainActivity extends AppCompatActivity implements EventListener{
             int seconds = (int) (millis / 1000);
             int minutes = seconds / 60;
             seconds = seconds % 60;
-            timerTextView.setText(String.format("%d:%02d", minutes, seconds));
+            timeSpent = String.format("%d:%02d", minutes, seconds);
+            timerTextView.setText(timeSpent);
             timerHandler.postDelayed(this, 500);
         }
     };
@@ -37,6 +45,14 @@ public class MainActivity extends AppCompatActivity implements EventListener{
 
     public void StopTimer() {
         timerHandler.removeCallbacks(timerRunnable);
+        SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
+        int id = Score.scoreArrayList.size();
+
+        String username = "Dummy";
+
+        Score newScore = new Score(id, username, 1, timeSpent);
+        Score.scoreArrayList.add(newScore);
+        sqliteManager.addScoreToDB(newScore);
         OpenScoreboard();
     }
 
@@ -45,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         timerTextView = findViewById(R.id.timerTextView);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        loadFromDBToMemory();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void loadFromDBToMemory() {
+        SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
+        sqliteManager.populateScoreListArray();
     }
 
     @Override

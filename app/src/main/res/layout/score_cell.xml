@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:padding="15dp">
+    <TextView
+        android:id="@+id/cellUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textStyle="bold"
+        android:layout_marginLeft="5dp"
+        android:maxLines="1"
+        android:textSize="15dp"/>
+    <TextView
+        android:id="@+id/cellLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="Level"
+        android:textSize="15dp"/>
+    <TextView
+        android:id="@+id/cellTimeSpent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="Time Spent"
+        android:textSize="15dp"/>
+
+</LinearLayout>

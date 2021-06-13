@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.media.MediaPlayer;
 
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity implements EventListener{
     Boolean timerStarted = false;
     int timeSpent;
     long startTime = 0;
+    MediaPlayer mediaPlayer;
+    Boolean isSoundMuted = false;
 
     Runnable timerRunnable = new Runnable() {
         @Override
@@ -46,8 +50,6 @@ public class MainActivity extends AppCompatActivity implements EventListener{
     public void StopTimer() {
         timerStarted = false;
         timerHandler.removeCallbacks(timerRunnable);
-
-        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.game_won);
         mediaPlayer.start();
 
         SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
@@ -77,11 +79,25 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mediaPlayer = MediaPlayer.create(this, R.raw.game_won);
+
         if (firstLoad) {
             System.out.println("loaded from DB");
             loadFromDBToMemory();
             firstLoad = false;
         }
+
+        final Button button = findViewById(R.id.soundToggle);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                isSoundMuted = !isSoundMuted;
+                if (isSoundMuted) {
+                    mediaPlayer.setVolume(0, 0);
+                } else {
+                    mediaPlayer.setVolume(1, 1);
+                }
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

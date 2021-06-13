@@ -15,8 +15,11 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
     private ListView scoreListView;
 
     @Override
-    public void sendDataToActivity(String data) {
-
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getStringExtra("ACTION").equals("Refresh-List")){
+            setScoreAdapter();
+        }
     }
 
     private void setScoreAdapter() {
@@ -30,8 +33,8 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
         setContentView(R.layout.activity_scoreboard);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        intent = new Intent(this, MainActivity.class);
 
+        intent = new Intent(this, MainActivity.class);
         scoreListView = findViewById(R.id.scoreListView);
         setScoreAdapter();
 
@@ -41,5 +44,10 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void sendDataToActivity(String data) {
+
     }
 }

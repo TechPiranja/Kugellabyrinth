@@ -71,6 +71,11 @@ public class GameView extends View {
         }
     }
 
+    public void ResetPlayerPoint(){
+        user.x = 0;
+        user.y = 0;
+    }
+
     public void PlayerInput(float x, float y) {
         if (y > 1f && user.y <= ROWS-2 && mazeArray[(int) user.x][(int) user.y+1] == ' '){
             user.y = user.y + 1;

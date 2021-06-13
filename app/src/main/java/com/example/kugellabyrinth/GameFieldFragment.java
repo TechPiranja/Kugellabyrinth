@@ -16,6 +16,7 @@ public class GameFieldFragment extends Fragment {
     SensorManager mSensorManager;
     Accelerometer accelerometer;
     private EventListener listener;
+    Boolean isGameRunning = false;
 
     @Override
     public void onAttach(Activity activity)
@@ -33,10 +34,16 @@ public class GameFieldFragment extends Fragment {
         accelerometer = new Accelerometer() {
             @Override
             public void onAccelerationChange(float x, float y) {
-                if (gameView.user.x != 0 && gameView.user.y != 0)
+                if (gameView.user.x != 0 && gameView.user.y != 0 && !isGameRunning) {
+                    isGameRunning = true;
                     listener.sendDataToActivity("Start-Timer");
-                if (gameView.user.x == 19 && gameView.user.y == 20)
+                }
+                if (gameView.user.x == 19 && gameView.user.y == 20 && isGameRunning)
+                {
+                    isGameRunning = false;
+                    gameView.ResetPlayerPoint();
                     listener.sendDataToActivity("Stop-Timer");
+                }
                 gameView.PlayerInput(x, y);
             }
         };

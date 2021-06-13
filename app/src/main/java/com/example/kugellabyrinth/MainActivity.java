@@ -1,5 +1,6 @@
 package com.example.kugellabyrinth;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements EventListener{
 
+    Boolean firstLoad = true;
     TextView timerTextView;
     Handler timerHandler = new Handler();
     Boolean timerStarted = false;
@@ -44,9 +46,11 @@ public class MainActivity extends AppCompatActivity implements EventListener{
     }
 
     public void StopTimer() {
+        timerStarted = false;
         timerHandler.removeCallbacks(timerRunnable);
         SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
         int id = Score.scoreArrayList.size();
+        System.out.println("ID: " + id + " and " + timeSpent);
 
         String username = "Dummy";
 
@@ -58,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements EventListener{
 
     public void OpenScoreboard() {
         Intent intent = new Intent(this, ScoreboardActivity.class);
+        intent.putExtra("ACTION","Refresh-List");
         startActivity(intent);
     }
 
@@ -69,7 +74,12 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         timerTextView = findViewById(R.id.timerTextView);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        loadFromDBToMemory();
+
+        if (firstLoad) {
+            System.out.println("loaded from DB");
+            loadFromDBToMemory();
+            firstLoad = false;
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -102,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements EventListener{
 
     @Override
     public void sendDataToActivity(String data) {
+        System.out.println("Event" + data);
         if (data == "Start-Timer" && !timerStarted)
             StartTimer();
         if (data == "Stop-Timer" && timerStarted)

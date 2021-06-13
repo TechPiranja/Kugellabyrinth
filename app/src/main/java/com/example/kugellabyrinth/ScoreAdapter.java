@@ -38,7 +38,8 @@ public class ScoreAdapter extends ArrayAdapter<Score> {
         int seconds = (int) (score.getTimeSpent() / 1000);
         int minutes = seconds / 60;
         seconds = seconds % 60;
-        String timeSpentText = String.format("%d:%02d", minutes, seconds);
+        int millis = score.getTimeSpent() % 1000;
+        String timeSpentText = String.format("%d m %02d s %03d ms", minutes, seconds, millis);
         timeSpent.setText(timeSpentText);
 
         return convertView;

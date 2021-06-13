@@ -1,6 +1,5 @@
 package com.example.kugellabyrinth;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,10 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.Date;
+import android.media.MediaPlayer;
 
 public class MainActivity extends AppCompatActivity implements EventListener{
 
@@ -49,6 +46,10 @@ public class MainActivity extends AppCompatActivity implements EventListener{
     public void StopTimer() {
         timerStarted = false;
         timerHandler.removeCallbacks(timerRunnable);
+
+        final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.game_won);
+        mediaPlayer.start();
+
         SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
         int id = Score.scoreArrayList.size();
         System.out.println("ID: " + id + " and " + timeSpent);

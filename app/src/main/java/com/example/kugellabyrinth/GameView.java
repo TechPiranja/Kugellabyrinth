@@ -19,6 +19,10 @@ public class GameView extends View {
     private char[] maze;
     private char[][] mazeArray;
 
+    long start = System.currentTimeMillis();
+    int speed = 100;
+    long end = start + speed;
+
     public GameView(Context context) {
         super(context);
         this.context = context;
@@ -77,6 +81,10 @@ public class GameView extends View {
     }
 
     public void PlayerInput(float x, float y) {
+        if (System.currentTimeMillis() < end) return;
+        start = System.currentTimeMillis();
+        end = start + speed;
+
         if (y > 1f && user.y <= ROWS-2 && mazeArray[(int) user.x][(int) user.y+1] == ' '){
             user.y = user.y + 1;
             invalidate();

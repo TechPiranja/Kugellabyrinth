@@ -1,11 +1,13 @@
 package com.example.kugellabyrinth;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -14,6 +16,7 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
     private Intent intent;
     private ListView scoreListView;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -22,11 +25,15 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setScoreAdapter() {
+        Score.scoreArrayList.sort((Score s1, Score s2)->s1.getTimeSpent()-s2.getTimeSpent());
+
         ScoreAdapter scoreAdapter = new ScoreAdapter(getApplicationContext(), Score.scoreArrayList);
         scoreListView.setAdapter(scoreAdapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

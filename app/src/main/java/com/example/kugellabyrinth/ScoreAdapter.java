@@ -34,7 +34,13 @@ public class ScoreAdapter extends ArrayAdapter<Score> {
         assert score != null;
         username.setText(score.getUsername());
         level.setText(String.valueOf(score.getLevel()));
-        timeSpent.setText(score.getTimeSpent());
+
+        int seconds = (int) (score.getTimeSpent() / 1000);
+        int minutes = seconds / 60;
+        seconds = seconds % 60;
+        String timeSpentText = String.format("%d:%02d", minutes, seconds);
+        timeSpent.setText(timeSpentText);
+
         return convertView;
     }
 }

@@ -45,7 +45,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
                     int id = result.getInt(1);
                     String username = result.getString(2);
                     int level = result.getInt(3);
-                    String timeSpent = result.getString(4);
+                    int timeSpent = result.getInt(4);
                     Score score = new Score(id, username, level, timeSpent);
                     Score.scoreArrayList.add(score);
                 }
@@ -59,7 +59,7 @@ public class SQLiteManager extends SQLiteOpenHelper {
         sql = new StringBuilder().append("CREATE TABLE ").append(TABLE_NAME).append("(")
                 .append(COUNTER).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ").append(ID_FIELD)
                 .append(" INT, ").append(USERNAME_FIELD).append(" TEXT, ").append(LEVEL_FIELD)
-                .append(" INT, ").append(TIMESPENT_FIELD).append(" TEXT)");
+                .append(" INT, ").append(TIMESPENT_FIELD).append(" INT)");
         db.execSQL(sql.toString());
     }
 

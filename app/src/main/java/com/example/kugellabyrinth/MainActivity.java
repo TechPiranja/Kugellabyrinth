@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements EventListener{
     TextView timerTextView;
     Handler timerHandler = new Handler();
     Boolean timerStarted = false;
-    String timeSpent;
+    int timeSpent;
     long startTime = 0;
 
     Runnable timerRunnable = new Runnable() {
@@ -33,8 +33,9 @@ public class MainActivity extends AppCompatActivity implements EventListener{
             int seconds = (int) (millis / 1000);
             int minutes = seconds / 60;
             seconds = seconds % 60;
-            timeSpent = String.format("%d:%02d", minutes, seconds);
-            timerTextView.setText(timeSpent);
+            timeSpent = (int)millis;
+            String timeSpentText = String.format("%d:%02d", minutes, seconds);
+            timerTextView.setText(timeSpentText);
             timerHandler.postDelayed(this, 500);
         }
     };

@@ -30,11 +30,12 @@
                 android:layout_height="wrap_content"
                 android:text="TextView" />
         </com.google.android.material.appbar.AppBarLayout>
-        <Button
+
+        <ImageButton
             android:id="@+id/soundToggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/volume_on" />
         <fragment
             android:id="@+id/fragment"
             android:name="com.example.kugellabyrinth.GameFieldFragment"

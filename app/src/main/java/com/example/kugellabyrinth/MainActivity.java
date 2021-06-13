@@ -12,7 +12,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.media.MediaPlayer;
 
@@ -87,14 +87,16 @@ public class MainActivity extends AppCompatActivity implements EventListener{
             firstLoad = false;
         }
 
-        final Button button = findViewById(R.id.soundToggle);
+        final ImageButton button = findViewById(R.id.soundToggle);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 isSoundMuted = !isSoundMuted;
                 if (isSoundMuted) {
                     mediaPlayer.setVolume(0, 0);
+                    button.setImageResource(R.drawable.volume_mute);
                 } else {
                     mediaPlayer.setVolume(1, 1);
+                    button.setImageResource(R.drawable.volume_on);
                 }
             }
         });

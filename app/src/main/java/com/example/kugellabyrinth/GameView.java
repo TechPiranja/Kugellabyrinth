@@ -4,7 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.view.View;
+
+import androidx.annotation.RequiresApi;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -102,6 +106,7 @@ public class GameView extends View {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -131,6 +136,6 @@ public class GameView extends View {
         }
 
         // draw player
-        canvas.drawRect(user.x*cellSize,user.y*cellSize,(user.x+1)*cellSize,(user.y+1)*cellSize, playerPaint);
+        canvas.drawOval(user.x*cellSize,user.y*cellSize,(user.x+1)*cellSize,(user.y+1)*cellSize, playerPaint);
     }
 }

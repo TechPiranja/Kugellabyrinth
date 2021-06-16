@@ -28,7 +28,7 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Return to Gamescreen" />
         <ListView
             android:id="@+id/scoreListView"
             android:layout_width="match_parent"

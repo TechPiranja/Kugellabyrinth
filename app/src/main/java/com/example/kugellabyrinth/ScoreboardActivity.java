@@ -45,6 +45,7 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
         final Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                intent.putExtra("ACTION","Restart-Game");
                 startActivity(intent);
             }
         });

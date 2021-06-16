@@ -82,8 +82,8 @@ public class MenuActivity extends AppCompatActivity{
             }
         });
 
-        usernameText.setText(pref.getString(username, "127.0.0.1"));
-        mqttAdressText.setText(pref.getString(mqttAdress, "Unknown"));
+        usernameText.setText(pref.getString(username, "Unknown"));
+        mqttAdressText.setText(pref.getString(mqttAdress, "127.0.0.1"));
         mqttAdressText.addTextChangedListener(new TextWatcher() {
 
             @Override

@@ -27,8 +27,6 @@ public class MenuActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         timerTextView = findViewById(R.id.timerTextView);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         soundPlayer = SoundPlayer.getInstance(this);
 
         if (firstLoad) {

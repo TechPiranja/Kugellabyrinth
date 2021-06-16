@@ -38,8 +38,6 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scoreboard);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         intent = new Intent(this, GameActivity.class);
         scoreListView = findViewById(R.id.scoreListView);

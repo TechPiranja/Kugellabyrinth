@@ -42,8 +42,6 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         timerTextView = findViewById(R.id.timerTextView);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         soundPlayer = SoundPlayer.getInstance(this);
     }
 

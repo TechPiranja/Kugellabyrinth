@@ -54,6 +54,7 @@ public class GameFieldFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        gameView.ResetPlayerPoint();
         mSensorManager.registerListener(accelerometer, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
     }
 

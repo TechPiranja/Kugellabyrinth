@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +51,7 @@ public class MenuActivity extends AppCompatActivity{
 
         final Button startGame = findViewById(R.id.startGame);
         startGame.setOnClickListener(v -> {
+            gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
         });
 

@@ -6,16 +6,17 @@ import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity implements EventListener{
 
+    SQLiteManager sqliteManager;
     TextView timerTextView;
     Handler timerHandler = new Handler();
     Boolean timerStarted = false;
@@ -45,9 +46,12 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         timerTextView = findViewById(R.id.timerTextView);
         soundPlayer = SoundPlayer.getInstance(this);
         Intent menuScreen = new Intent(this, MenuActivity.class);
+        sqliteManager = SQLiteManager.instanceOfDatabase(this);
 
         final ImageButton openMenu = findViewById(R.id.openMenu);
         openMenu.setOnClickListener(v -> {
+            timerStarted = false;
+            timerHandler.removeCallbacks(timerRunnable);
             startActivity(menuScreen);
         });
     }
@@ -59,20 +63,19 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     }
 
     public void StopTimer() {
+        // stop timer
         timerStarted = false;
         timerHandler.removeCallbacks(timerRunnable);
         soundPlayer.start();
 
-        SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
+        // creating and adding score to scoreArrayList
         int id = Score.scoreArrayList.size();
-        System.out.println("ID: " + id + " and " + timeSpent);
-
         String username = "Dummy";
-
         Score newScore = new Score(id, username, 1, timeSpent);
         Score.scoreArrayList.add(newScore);
+
+        // adding score to database
         sqliteManager.addScoreToDB(newScore);
-        OpenScoreboard();
     }
 
     public void OpenScoreboard() {
@@ -83,22 +86,16 @@ public class GameActivity extends AppCompatActivity implements EventListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -107,7 +104,18 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         System.out.println("Event" + data);
         if (data == "Start-Timer" && !timerStarted)
             StartTimer();
-        if (data == "Stop-Timer" && timerStarted)
+        if (data == "Stop-Timer" && timerStarted){
             StopTimer();
+            OpenScoreboard();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getStringExtra("ACTION").equals("Restart-Game")){
+            StartTimer();
+        }
     }
 }

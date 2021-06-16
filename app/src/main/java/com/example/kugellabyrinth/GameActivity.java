@@ -11,21 +11,16 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.media.MediaPlayer;
 
-public class MainActivity extends AppCompatActivity implements EventListener{
+public class GameActivity extends AppCompatActivity implements EventListener{
 
-    Boolean firstLoad = true;
     TextView timerTextView;
     Handler timerHandler = new Handler();
     Boolean timerStarted = false;
     int timeSpent;
     long startTime = 0;
-    MediaPlayer mediaPlayer;
-    Boolean isSoundMuted = false;
+    SoundPlayer soundPlayer;
 
     Runnable timerRunnable = new Runnable() {
         @Override
@@ -41,6 +36,17 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game);
+        timerTextView = findViewById(R.id.timerTextView);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        soundPlayer = SoundPlayer.getInstance(this);
+    }
+
     public void StartTimer() {
         timerStarted = true;
         startTime = System.currentTimeMillis();
@@ -50,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements EventListener{
     public void StopTimer() {
         timerStarted = false;
         timerHandler.removeCallbacks(timerRunnable);
-        mediaPlayer.start();
+        soundPlayer.start();
 
         SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
         int id = Score.scoreArrayList.size();
@@ -70,44 +76,6 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         startActivity(intent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        timerTextView = findViewById(R.id.timerTextView);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mediaPlayer = MediaPlayer.create(this, R.raw.game_won);
-
-        if (firstLoad) {
-            System.out.println("loaded from DB");
-            loadFromDBToMemory();
-            firstLoad = false;
-        }
-
-        final ImageButton button = findViewById(R.id.soundToggle);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                isSoundMuted = !isSoundMuted;
-                if (isSoundMuted) {
-                    mediaPlayer.setVolume(0, 0);
-                    button.setImageResource(R.drawable.volume_mute);
-                } else {
-                    mediaPlayer.setVolume(1, 1);
-                    button.setImageResource(R.drawable.volume_on);
-                }
-            }
-        });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void loadFromDBToMemory() {
-        SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
-        sqliteManager.populateScoreListArray();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -122,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements EventListener{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

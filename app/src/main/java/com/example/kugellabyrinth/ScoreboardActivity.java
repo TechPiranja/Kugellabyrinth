@@ -41,7 +41,7 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        intent = new Intent(this, MainActivity.class);
+        intent = new Intent(this, GameActivity.class);
         scoreListView = findViewById(R.id.scoreListView);
         setScoreAdapter();
 

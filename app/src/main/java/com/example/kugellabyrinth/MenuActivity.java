@@ -57,6 +57,7 @@ public class MenuActivity extends AppCompatActivity{
 
         final Button openScoreboard = findViewById(R.id.openScoreboard);
         openScoreboard.setOnClickListener(v -> {
+            scoreBoardScreen.putExtra("ACTION","Refresh-List");
             startActivity(scoreBoardScreen);
         });
     }

@@ -9,7 +9,6 @@ import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 public class ScoreboardActivity extends AppCompatActivity implements EventListener{
 

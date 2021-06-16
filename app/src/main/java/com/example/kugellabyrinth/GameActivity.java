@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity implements EventListener{
@@ -43,6 +44,12 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         setContentView(R.layout.activity_game);
         timerTextView = findViewById(R.id.timerTextView);
         soundPlayer = SoundPlayer.getInstance(this);
+        Intent menuScreen = new Intent(this, MenuActivity.class);
+
+        final ImageButton openMenu = findViewById(R.id.openMenu);
+        openMenu.setOnClickListener(v -> {
+            startActivity(menuScreen);
+        });
     }
 
     public void StartTimer() {

@@ -110,7 +110,6 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawColor(Color.GRAY);
 
         int width = getWidth();
         int height = getHeight();

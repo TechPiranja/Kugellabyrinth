@@ -1,16 +1,22 @@
 package com.example.kugellabyrinth;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 public class MenuActivity extends AppCompatActivity{
@@ -19,10 +25,13 @@ public class MenuActivity extends AppCompatActivity{
     Boolean isSoundMuted = false;
     Boolean firstLoad = true;
     TextView timerTextView;
+    public static final String mqttAdress = "127.0.0.1";
+    public static final String username = "Unknown";
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         timerTextView = findViewById(R.id.timerTextView);
@@ -59,6 +68,48 @@ public class MenuActivity extends AppCompatActivity{
         openScoreboard.setOnClickListener(v -> {
             scoreBoardScreen.putExtra("ACTION","Refresh-List");
             startActivity(scoreBoardScreen);
+        });
+
+        Switch sensorSwitch = findViewById(R.id.sensorSwitch);
+        EditText mqttAdressText = findViewById(R.id.mqttAddress);
+        EditText usernameText = findViewById(R.id.usernameText);
+
+        sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked){
+                mqttAdressText.setEnabled(true);
+            } else {
+                mqttAdressText.setEnabled(false);
+            }
+        });
+
+        usernameText.setText(pref.getString(username, "127.0.0.1"));
+        mqttAdressText.setText(pref.getString(mqttAdress, "Unknown"));
+        mqttAdressText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                pref.edit().putString(mqttAdress, s.toString()).commit();
+            }
+        });
+
+        usernameText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                pref.edit().putString(username, s.toString()).commit();
+            }
         });
     }
 

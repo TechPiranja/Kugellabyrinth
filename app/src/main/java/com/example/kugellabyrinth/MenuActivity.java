@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -19,14 +20,25 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import java.io.UnsupportedEncodingException;
+
 public class MenuActivity extends AppCompatActivity{
 
     SoundPlayer soundPlayer;
     Boolean isSoundMuted = false;
     Boolean firstLoad = true;
     TextView timerTextView;
-    public static final String mqttAdress = "127.0.0.1";
+    public static final String mqttAddress = "127.0.0.1";
     public static final String username = "Unknown";
+    Boolean usingMQTT = false;
+    MqttAndroidClient client;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -59,7 +71,51 @@ public class MenuActivity extends AppCompatActivity{
         Intent scoreBoardScreen = new Intent(this, ScoreboardActivity.class);
 
         final Button startGame = findViewById(R.id.startGame);
+        String serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":8883";
+        String clientId = MqttClient.generateClientId();
+        //client =  new MqttAndroidClient(this.getApplicationContext(), serverUri, clientId);
+
+
         startGame.setOnClickListener(v -> {
+            if (usingMQTT){
+                //client.connect(pref.getString(mqttAddress, "127.0.0.1"), this.getApplicationContext());
+                final MqttAndroidClient client =
+                        new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.178.60:1883",
+                                clientId);
+
+                try {
+                    IMqttToken token = client.connect();
+                    token.setActionCallback(new IMqttActionListener() {
+                        @Override
+                        public void onSuccess(IMqttToken asyncActionToken) {
+                            // We are connected
+                            Log.d("TEST", "onSuccess");
+
+                            String topic = "foo/bar";
+                            String payload = "the payload";
+                            byte[] encodedPayload = new byte[0];
+                            try {
+                                encodedPayload = payload.getBytes("UTF-8");
+                                MqttMessage message = new MqttMessage(encodedPayload);
+                                client.publish(topic, message);
+                            } catch (UnsupportedEncodingException | MqttException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                            // Something went wrong e.g. connection timeout or firewall problems
+                            Log.d("TEST", "onFailure");
+
+                        }
+                    });
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("Connecting to MQTT");
+            }
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
         });
@@ -77,13 +133,18 @@ public class MenuActivity extends AppCompatActivity{
         sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 mqttAdressText.setEnabled(true);
+                usingMQTT = true;
             } else {
                 mqttAdressText.setEnabled(false);
+                if (usingMQTT) {
+                    //client.disconnect();
+                    usingMQTT = false;
+                }
             }
         });
 
         usernameText.setText(pref.getString(username, "Unknown"));
-        mqttAdressText.setText(pref.getString(mqttAdress, "127.0.0.1"));
+        mqttAdressText.setText(pref.getString(mqttAddress, "127.0.0.1"));
         mqttAdressText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -95,7 +156,7 @@ public class MenuActivity extends AppCompatActivity{
 
             @Override
             public void afterTextChanged(Editable s) {
-                pref.edit().putString(mqttAdress, s.toString()).commit();
+                pref.edit().putString(mqttAddress, s.toString()).commit();
             }
         });
 
@@ -114,6 +175,8 @@ public class MenuActivity extends AppCompatActivity{
                 pref.edit().putString(username, s.toString()).commit();
             }
         });
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

@@ -1,6 +1,7 @@
 package com.example.kugellabyrinth;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +25,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     int timeSpent;
     long startTime = 0;
     SoundPlayer soundPlayer;
+    SharedPreferences pref;
 
     Runnable timerRunnable = new Runnable() {
         @Override
@@ -42,6 +45,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_game);
         timerTextView = findViewById(R.id.timerTextView);
         soundPlayer = SoundPlayer.getInstance(this);
@@ -70,8 +74,9 @@ public class GameActivity extends AppCompatActivity implements EventListener{
 
         // creating and adding score to scoreArrayList
         int id = Score.scoreArrayList.size();
-        String username = "Dummy";
-        Score newScore = new Score(id, username, 1, timeSpent);
+        String username = "";
+        username = pref.getString(username, "Unknown");
+        Score newScore = new Score(id, pref.getString(username, "Unknown"), 1, timeSpent);
         Score.scoreArrayList.add(newScore);
 
         // adding score to database

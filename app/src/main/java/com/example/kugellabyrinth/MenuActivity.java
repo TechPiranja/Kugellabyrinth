@@ -92,6 +92,7 @@ public class MenuActivity extends AppCompatActivity{
                     client.disconnect();
                 }
             }
+            System.out.println("Switch MQTT: " + MQTTClient.usingMQTT);
         });
         usernameText.setText(pref.getString(username, "Unknown"));
         mqttAdressText.setText(pref.getString(mqttAddress, "127.0.0.1"));

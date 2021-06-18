@@ -1,23 +1,23 @@
 package com.example.kugellabyrinth;
 
-import android.content.Context;
 import android.util.Log;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import java.io.UnsupportedEncodingException;
-
 public class MQTTClient {
 
-    MqttClient client;
-    private MemoryPersistence persistence;
+    private static final String sub_topic = "sensor/data";      // ggf. Anpassen
+    private static final String pub_topic = "sensehat/message"; // ggf. Anpassen
+    private int qos = 0; // MQTT quality of service
+    private String data;
+    private String clientId;
+    private MemoryPersistence persistence = new MemoryPersistence();
+    private MqttClient client;
 
     private static MQTTClient instance;
 
@@ -31,44 +31,79 @@ public class MQTTClient {
         }
         return MQTTClient.instance;
     }
-
-    public void connect (String broker, Context context) {
-        String serverUri = "tcp://" + broker + ":8883";
-        String clientId = MqttClient.generateClientId();
-
-        final MqttAndroidClient client =
-                new MqttAndroidClient(context, serverUri,
-                        clientId);
-
+    /**
+     * Connect to broker and
+     * @param broker Broker to connect to
+     */
+    public void connect (String broker) {
         try {
-            IMqttToken token = client.connect();
-            token.setActionCallback(new IMqttActionListener() {
+            clientId = MqttClient.generateClientId();
+            client = new MqttClient(broker, clientId, persistence);
+            MqttConnectOptions connOpts = new MqttConnectOptions();
+            connOpts.setCleanSession(true);
+            Log.d("TEST", "Connecting to broker: " + broker);
+            client.connect(connOpts);
+            Log.d("TEST", "Connected with broker: " + broker);
+        } catch (MqttException me) {
+            Log.e("TEST", "Reason: " + me.getReasonCode());
+            Log.e("TEST", "Message: " + me.getMessage());
+            Log.e("TEST", "localizedMsg: " + me.getLocalizedMessage());
+            Log.e("TEST", "cause: " + me.getCause());
+            Log.e("TEST", "exception: " + me);
+        }
+    }
+
+    /**
+     * Subscribes to a given topic
+     * @param topic Topic to subscribe to
+     */
+    public void subscribe(String topic) {
+        try {
+            client.subscribe(topic, qos, new IMqttMessageListener() {
                 @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    // We are connected
-                    Log.d("TEST", "onSuccess");
-
-                    String topic = "foo/bar";
-                    String payload = "the payload";
-                    byte[] encodedPayload = new byte[0];
-                    try {
-                        encodedPayload = payload.getBytes("UTF-8");
-                        MqttMessage message = new MqttMessage(encodedPayload);
-                        //client.publish(topic, message);
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    // Something went wrong e.g. connection timeout or firewall problems
-                    Log.d("TEST", "onFailure");
-
+                public void messageArrived(String topic, MqttMessage msg) throws Exception {
+                    String message = new String(msg.getPayload());
+                    Log.d("TEST", "Message with topic " + topic + " arrived: " + message);
                 }
             });
+            Log.d("TEST", "subscribed to topic " + topic);
         } catch (MqttException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Publishes a message via MQTT (with fixed topic)
+     * @param topic topic to publish with
+     * @param msg message to publish with publish topic
+     */
+    public void publish(String topic, String msg) {
+        MqttMessage message = new MqttMessage(msg.getBytes());
+        message.setQos(qos);
+        try {
+            client.publish(topic, message);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Unsubscribe from default topic (please unsubscribe from further
+     * topics prior to calling this function)
+     */
+    public void disconnect() {
+        try {
+            client.unsubscribe(sub_topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+            Log.e("TEST", e.getMessage());
+        }
+        try {
+            Log.d("TEST", "Disconnecting from broker");
+            client.disconnect();
+            Log.d("TEST", "Disconnected.");
+        } catch (MqttException me) {
+            Log.e("TEST", me.getMessage());
         }
     }
 }

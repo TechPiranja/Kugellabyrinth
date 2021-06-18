@@ -71,50 +71,16 @@ public class MenuActivity extends AppCompatActivity{
         Intent scoreBoardScreen = new Intent(this, ScoreboardActivity.class);
 
         final Button startGame = findViewById(R.id.startGame);
-        String serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":8883";
+        String serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
         String clientId = MqttClient.generateClientId();
-        //client =  new MqttAndroidClient(this.getApplicationContext(), serverUri, clientId);
 
 
         startGame.setOnClickListener(v -> {
             if (usingMQTT){
-                //client.connect(pref.getString(mqttAddress, "127.0.0.1"), this.getApplicationContext());
-                final MqttAndroidClient client =
-                        new MqttAndroidClient(this.getApplicationContext(), "tcp://192.168.178.60:1883",
-                                clientId);
 
-                try {
-                    IMqttToken token = client.connect();
-                    token.setActionCallback(new IMqttActionListener() {
-                        @Override
-                        public void onSuccess(IMqttToken asyncActionToken) {
-                            // We are connected
-                            Log.d("TEST", "onSuccess");
-
-                            String topic = "foo/bar";
-                            String payload = "the payload";
-                            byte[] encodedPayload = new byte[0];
-                            try {
-                                encodedPayload = payload.getBytes("UTF-8");
-                                MqttMessage message = new MqttMessage(encodedPayload);
-                                client.publish(topic, message);
-                            } catch (UnsupportedEncodingException | MqttException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                            // Something went wrong e.g. connection timeout or firewall problems
-                            Log.d("TEST", "onFailure");
-
-                        }
-                    });
-                } catch (MqttException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println("Connecting to MQTT");
+                MQTTClient client = MQTTClient.getInstance();
+                client.connect(serverUri);
+                client.publish("sensehat/message", "test");
             }
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);

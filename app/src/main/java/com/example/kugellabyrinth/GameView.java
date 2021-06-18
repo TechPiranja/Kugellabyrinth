@@ -85,22 +85,23 @@ public class GameView extends View {
     }
 
     public void PlayerInput(float x, float y) {
+        System.out.println(x + ", "+ y);
         if (System.currentTimeMillis() < end) return;
         start = System.currentTimeMillis();
         end = start + speed;
 
-        if (y > 1f && user.y <= ROWS-2 && mazeArray[(int) user.x][(int) user.y+1] == ' '){
+        if (y > 0.5f && user.y <= ROWS-2 && mazeArray[(int) user.x][(int) user.y+1] == ' '){
             user.y = user.y + 1;
             invalidate();
-        } else if (y < -1f && user.y > 1 && mazeArray[(int) user.x][(int) user.y-1] == ' ') {
+        } else if (y < -0.5f && user.y > 1 && mazeArray[(int) user.x][(int) user.y-1] == ' ') {
             user.y = user.y - 1;
             invalidate();
         }
 
-        if (x < 1f && user.x <= COLS-2 && mazeArray[(int) user.x+1][(int) user.y] == ' '){
+        if (x < 0.5f && user.x <= COLS-2 && mazeArray[(int) user.x+1][(int) user.y] == ' '){
             user.x = user.x + 1;
             invalidate();
-        } else if (x > -1f && user.x > 1 && mazeArray[(int) user.x-1][(int) user.y] == ' ') {
+        } else if (x > -0.5f && user.x > 1 && mazeArray[(int) user.x-1][(int) user.y] == ' ') {
             user.x = user.x - 1;
             invalidate();
         }

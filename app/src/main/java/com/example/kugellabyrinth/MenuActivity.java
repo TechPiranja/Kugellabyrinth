@@ -19,8 +19,6 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-
 public class MenuActivity extends AppCompatActivity{
 
     SoundPlayer soundPlayer;
@@ -29,7 +27,6 @@ public class MenuActivity extends AppCompatActivity{
     TextView timerTextView;
     public static final String mqttAddress = "127.0.0.1";
     public static final String username = "Unknown";
-    Boolean usingMQTT = false;
     MQTTClient client;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -66,10 +63,9 @@ public class MenuActivity extends AppCompatActivity{
         client = MQTTClient.getInstance();
         String serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
         startGame.setOnClickListener(v -> {
-            if (usingMQTT){
+            if (MQTTClient.usingMQTT){
                 client.connect(serverUri);
                 client.publish("sensehat/message", "Start");
-                client.subscribe("sensor/data");
             }
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
@@ -88,11 +84,11 @@ public class MenuActivity extends AppCompatActivity{
         sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 mqttAdressText.setEnabled(true);
-                usingMQTT = true;
+                MQTTClient.usingMQTT = true;
             } else {
                 mqttAdressText.setEnabled(false);
-                if (usingMQTT) {
-                    usingMQTT = false;
+                if (MQTTClient.usingMQTT) {
+                    MQTTClient.usingMQTT = false;
                     client.disconnect();
                 }
             }

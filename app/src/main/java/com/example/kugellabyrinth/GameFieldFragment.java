@@ -6,9 +6,15 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class GameFieldFragment extends Fragment {
 
@@ -17,6 +23,7 @@ public class GameFieldFragment extends Fragment {
     Accelerometer accelerometer;
     private EventListener listener;
     Boolean isGameRunning = false;
+    MQTTClient client;
 
     @Override
     public void onAttach(Activity activity)
@@ -31,9 +38,25 @@ public class GameFieldFragment extends Fragment {
                              Bundle savedInstanceState) {
         gameView = new GameView(getActivity());
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = new Accelerometer() {
-            @Override
-            public void onAccelerationChange(float x, float y) {
+        client = MQTTClient.getInstance();
+        if (MQTTClient.usingMQTT){
+            subscribe("sensor/data");
+
+            if (gameView.user.x != 0 && gameView.user.y != 0 && !isGameRunning) {
+                isGameRunning = true;
+                listener.sendDataToActivity("Start-Timer");
+            }
+            if (gameView.user.x == 19 && gameView.user.y == 20 && isGameRunning)
+            {
+                isGameRunning = false;
+                gameView.ResetPlayerPoint();
+                listener.sendDataToActivity("Stop-Timer");
+            }
+        }
+        else {
+            accelerometer = new Accelerometer() {
+                @Override
+                public void onAccelerationChange(float x, float y) {
                 if (gameView.user.x != 0 && gameView.user.y != 0 && !isGameRunning) {
                     isGameRunning = true;
                     listener.sendDataToActivity("Start-Timer");
@@ -45,10 +68,25 @@ public class GameFieldFragment extends Fragment {
                     listener.sendDataToActivity("Stop-Timer");
                 }
                 gameView.PlayerInput(x, y);
-            }
-        };
-        accelerometer.setGravitationalConstant(SensorManager.GRAVITY_EARTH);
+                }
+            };
+            accelerometer.setGravitationalConstant(SensorManager.GRAVITY_EARTH);
+        }
         return gameView;
+    }
+
+    public void subscribe(String topic) {
+        try {
+            client.client.subscribe(topic, client.qos, (topic1, msg) -> {
+                String message = new String(msg.getPayload());
+                String[] msgArray = message.split(", ", 3);
+                gameView.PlayerInput(-1 * Float.parseFloat(msgArray[0]), Float.parseFloat(msgArray[1]));
+                Log.d("TEST", "subscribed to topic " + topic + Float.parseFloat(msgArray[0]) + Float.parseFloat(msgArray[1]));
+            });
+            Log.d("TEST", "subscribed to topic " + topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

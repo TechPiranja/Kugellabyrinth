@@ -13,11 +13,11 @@ public class MQTTClient {
 
     private static final String sub_topic = "sensor/data";      // ggf. Anpassen
     private static final String pub_topic = "sensehat/message"; // ggf. Anpassen
-    private int qos = 0; // MQTT quality of service
-    private String data;
+    public static int qos = 0; // MQTT quality of service
     private String clientId;
     private MemoryPersistence persistence;
-    private MqttClient client;
+    public MqttClient client;
+    public static Boolean usingMQTT = false;
 
     private static MQTTClient instance;
 

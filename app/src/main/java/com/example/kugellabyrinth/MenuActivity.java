@@ -65,7 +65,7 @@ public class MenuActivity extends AppCompatActivity{
         startGame.setOnClickListener(v -> {
             if (MQTTClient.usingMQTT){
                 client.connect(serverUri);
-                client.publish("sensehat/message", "Start");
+                client.publish("sensehat/message", "start");
             }
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
@@ -84,11 +84,11 @@ public class MenuActivity extends AppCompatActivity{
         sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 mqttAdressText.setEnabled(true);
-                MQTTClient.usingMQTT = true;
+                client.usingMQTT = true;
             } else {
                 mqttAdressText.setEnabled(false);
-                if (MQTTClient.usingMQTT) {
-                    MQTTClient.usingMQTT = false;
+                if (client.usingMQTT && client.isConnected) {
+                    client.usingMQTT = false;
                     client.disconnect();
                 }
             }

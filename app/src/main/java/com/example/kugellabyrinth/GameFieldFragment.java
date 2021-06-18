@@ -12,9 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class GameFieldFragment extends Fragment {
 
@@ -80,6 +78,7 @@ public class GameFieldFragment extends Fragment {
                     isGameRunning = false;
                     gameView.ResetPlayerPoint();
                     listener.sendDataToActivity("Stop-Timer");
+                    client.publish("sensehat/message", "blinken");
                 }
             });
             Log.d("TEST", "subscribed to topic " + topic);

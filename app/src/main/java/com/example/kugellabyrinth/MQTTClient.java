@@ -18,6 +18,7 @@ public class MQTTClient {
     private MemoryPersistence persistence;
     public MqttClient client;
     public static Boolean usingMQTT = false;
+    public static Boolean isConnected = false;
 
     private static MQTTClient instance;
 
@@ -43,6 +44,7 @@ public class MQTTClient {
             connOpts.setCleanSession(true);
             Log.d("TEST", "Connecting to broker: " + broker);
             client.connect(connOpts);
+            isConnected = true;
             Log.d("TEST", "Connected with broker: " + broker);
         } catch (MqttException me) {
             Log.e("TEST", "Reason: " + me.getReasonCode());
@@ -101,6 +103,7 @@ public class MQTTClient {
         try {
             Log.d("TEST", "Disconnecting from broker");
             client.disconnect();
+            isConnected = false;
             Log.d("TEST", "Disconnected.");
         } catch (MqttException me) {
             Log.e("TEST", me.getMessage());

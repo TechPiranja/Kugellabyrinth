@@ -16,7 +16,7 @@ public class MQTTClient {
     private int qos = 0; // MQTT quality of service
     private String data;
     private String clientId;
-    private MemoryPersistence persistence = new MemoryPersistence();
+    private MemoryPersistence persistence;
     private MqttClient client;
 
     private static MQTTClient instance;

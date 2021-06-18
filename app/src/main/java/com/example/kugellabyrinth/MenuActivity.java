@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -21,13 +20,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.io.UnsupportedEncodingException;
 
 public class MenuActivity extends AppCompatActivity{
 
@@ -38,7 +30,7 @@ public class MenuActivity extends AppCompatActivity{
     public static final String mqttAddress = "127.0.0.1";
     public static final String username = "Unknown";
     Boolean usingMQTT = false;
-    MqttAndroidClient client;
+    MQTTClient client;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -69,18 +61,15 @@ public class MenuActivity extends AppCompatActivity{
 
         Intent gameScreen = new Intent(this, GameActivity.class);
         Intent scoreBoardScreen = new Intent(this, ScoreboardActivity.class);
-
         final Button startGame = findViewById(R.id.startGame);
+
+        client = MQTTClient.getInstance();
         String serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
-        String clientId = MqttClient.generateClientId();
-
-
         startGame.setOnClickListener(v -> {
             if (usingMQTT){
-
-                MQTTClient client = MQTTClient.getInstance();
                 client.connect(serverUri);
-                client.publish("sensehat/message", "test");
+                client.publish("sensehat/message", "Start");
+                client.subscribe("sensor/data");
             }
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
@@ -103,12 +92,11 @@ public class MenuActivity extends AppCompatActivity{
             } else {
                 mqttAdressText.setEnabled(false);
                 if (usingMQTT) {
-                    //client.disconnect();
                     usingMQTT = false;
+                    client.disconnect();
                 }
             }
         });
-
         usernameText.setText(pref.getString(username, "Unknown"));
         mqttAdressText.setText(pref.getString(mqttAddress, "127.0.0.1"));
         mqttAdressText.addTextChangedListener(new TextWatcher() {
@@ -125,7 +113,6 @@ public class MenuActivity extends AppCompatActivity{
                 pref.edit().putString(mqttAddress, s.toString()).commit();
             }
         });
-
         usernameText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -141,8 +128,6 @@ public class MenuActivity extends AppCompatActivity{
                 pref.edit().putString(username, s.toString()).commit();
             }
         });
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)

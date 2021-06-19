@@ -25,6 +25,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     long startTime = 0;
     SoundPlayer soundPlayer;
     SharedPreferences pref;
+    TextView gameTitle;
 
     Runnable timerRunnable = new Runnable() {
         @Override
@@ -50,6 +51,8 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         soundPlayer = SoundPlayer.getInstance(this);
         Intent menuScreen = new Intent(this, MenuActivity.class);
         sqliteManager = SQLiteManager.instanceOfDatabase(this);
+        gameTitle = findViewById(R.id.gameTitle);
+        gameTitle.setText("Level " + 0);
 
         final ImageButton openMenu = findViewById(R.id.openMenu);
         openMenu.setOnClickListener(v -> {
@@ -120,6 +123,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         super.onNewIntent(intent);
         if(intent.getStringExtra("ACTION").equals("Restart-Game")){
             StartTimer();
+            gameTitle.setText("Level " + (GameFieldFragment.currentLevel + 1));
         }
     }
 }

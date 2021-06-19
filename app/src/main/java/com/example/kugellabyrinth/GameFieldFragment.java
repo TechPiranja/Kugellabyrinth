@@ -21,7 +21,7 @@ public class GameFieldFragment extends Fragment {
     private EventListener listener;
     Boolean isGameRunning = false;
     MQTTClient client;
-    private int currentLevel = 0;
+    public static int currentLevel = 0;
 
     @Override
     public void onAttach(Activity activity)

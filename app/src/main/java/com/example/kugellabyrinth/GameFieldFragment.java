@@ -7,7 +7,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ public class GameFieldFragment extends Fragment {
     private EventListener listener;
     Boolean isGameRunning = false;
     MQTTClient client;
+    private int currentLevel = 0;
 
     @Override
     public void onAttach(Activity activity)
@@ -81,7 +81,6 @@ public class GameFieldFragment extends Fragment {
                     client.publish("sensehat/message", "blinken");
                 }
             });
-            Log.d("TEST", "subscribed to topic " + topic);
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -90,12 +89,13 @@ public class GameFieldFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        currentLevel = (currentLevel + 1) % 5;
         gameView.ResetPlayerPoint();
+        gameView.loadNextLevel(currentLevel);
         if (MQTTClient.usingMQTT){
             subscribe("sensor/data");
         }
         else {
-
             accelerometer = new Accelerometer() {
                 @Override
                 public void onAccelerationChange(float x, float y) {

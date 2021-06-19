@@ -45,14 +45,14 @@ public class GameView extends View {
         spacePaint = new Paint();
         spacePaint.setColor(Color.WHITE);
 
-        mazeArray = new char[COLS+2][ROWS+2];
-        readMaze();
+        mazeArray = new char[COLS + 2][ROWS + 2];
+        readMaze(0);
         convertMaze();
     }
 
-    private void readMaze() {
+    private void readMaze(int level) {
         try {
-            InputStream is = context.getAssets().open("mazeGen1.txt");
+            InputStream is = context.getAssets().open("mazeGen" + level + ".txt");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -64,24 +64,28 @@ public class GameView extends View {
         }
     }
 
-    private void convertMaze(){
+    private void convertMaze() {
         int y = 0;
         int x = 0;
-        for (int i = 0; i < maze.length; i++){
+        for (int i = 0; i < maze.length; i++) {
             mazeArray[x][y] = maze[i];
             x++;
 
-            if (maze[i] == '\n')
-            {
+            if (maze[i] == '\n') {
                 y++;
                 x = 0;
             }
         }
     }
 
-    public void ResetPlayerPoint(){
+    public void ResetPlayerPoint() {
         user.x = 0;
         user.y = 0;
+    }
+
+    public void loadNextLevel(int level){
+        readMaze(level);
+        convertMaze();
     }
 
     public void PlayerInput(float x, float y) {

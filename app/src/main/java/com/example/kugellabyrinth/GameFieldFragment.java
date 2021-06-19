@@ -89,7 +89,6 @@ public class GameFieldFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        currentLevel = (currentLevel + 1) % 5;
         gameView.ResetPlayerPoint();
         gameView.loadNextLevel(currentLevel);
         if (MQTTClient.usingMQTT){

@@ -52,7 +52,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         Intent menuScreen = new Intent(this, MenuActivity.class);
         sqliteManager = SQLiteManager.instanceOfDatabase(this);
         gameTitle = findViewById(R.id.gameTitle);
-        gameTitle.setText("Level " + 0);
+        gameTitle.setText("Level " + 1);
 
         final ImageButton openMenu = findViewById(R.id.openMenu);
         openMenu.setOnClickListener(v -> {
@@ -78,7 +78,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         int id = Score.scoreArrayList.size();
         String username = "";
         username = pref.getString(username, "Unknown");
-        Score newScore = new Score(id, pref.getString(username, "Unknown"), GameFieldFragment.currentLevel, timeSpent);
+        Score newScore = new Score(id, pref.getString(username, "Unknown"), GameFieldFragment.currentLevel + 1, timeSpent);
         Score.scoreArrayList.add(newScore);
 
         // adding score to database
@@ -123,6 +123,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         super.onNewIntent(intent);
         if(intent.getStringExtra("ACTION").equals("Restart-Game")){
             StartTimer();
+            GameFieldFragment.currentLevel = (GameFieldFragment.currentLevel + 1) % 5;
             gameTitle.setText("Level " + (GameFieldFragment.currentLevel + 1));
         }
     }

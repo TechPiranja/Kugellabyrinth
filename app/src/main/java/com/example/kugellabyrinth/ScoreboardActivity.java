@@ -10,6 +10,8 @@ import android.widget.ListView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class ScoreboardActivity extends AppCompatActivity implements EventListener{
 
     private Intent intent;
@@ -27,8 +29,8 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setScoreAdapter() {
         Score.scoreArrayList.sort((Score s1, Score s2)->s1.getTimeSpent()-s2.getTimeSpent());
-
-        ScoreAdapter scoreAdapter = new ScoreAdapter(getApplicationContext(), Score.scoreArrayList);
+        ArrayList<Score> filteredScoreList = Score.getScoresForLevel(GameFieldFragment.currentLevel+1);
+        ScoreAdapter scoreAdapter = new ScoreAdapter(getApplicationContext(), filteredScoreList);
         scoreListView.setAdapter(scoreAdapter);
     }
 

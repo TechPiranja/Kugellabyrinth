@@ -1,5 +1,10 @@
 package com.example.kugellabyrinth;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -28,5 +33,17 @@ public class Score {
     }
     public int getLevel(){
         return level;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public static ArrayList<Score> getScoresForLevel(int level) {
+        ArrayList<Score> toReturn = new ArrayList<>();
+        for (Score s : scoreArrayList
+                .stream()
+                .filter(s -> s.level == level)
+                .toArray(Score[]::new)) {
+            toReturn.add(s);
+        }
+        return toReturn;
     }
 }

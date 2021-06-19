@@ -78,7 +78,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         int id = Score.scoreArrayList.size();
         String username = "";
         username = pref.getString(username, "Unknown");
-        Score newScore = new Score(id, pref.getString(username, "Unknown"), 1, timeSpent);
+        Score newScore = new Score(id, pref.getString(username, "Unknown"), GameFieldFragment.currentLevel, timeSpent);
         Score.scoreArrayList.add(newScore);
 
         // adding score to database

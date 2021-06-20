@@ -37,7 +37,6 @@ public class ScoreAdapter extends ArrayAdapter<Score> {
         int millis = score.getTimeSpent() % 1000;
         String timeSpentText = String.format("%d m %02d s %03d ms", minutes, seconds, millis);
         timeSpent.setText(timeSpentText);
-        System.out.println(position);
         // we have to add 1, so the list starts at 1 ant not 0
         winnerPlace.setText(String.valueOf(position + 1));
         return convertView;

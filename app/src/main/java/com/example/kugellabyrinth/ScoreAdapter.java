@@ -14,7 +14,16 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 
+/**
+ * The type Score adapter.
+ */
 public class ScoreAdapter extends ArrayAdapter<Score> {
+    /**
+     * Instantiates a new Score adapter.
+     *
+     * @param context the context
+     * @param scores  the scores
+     */
     public ScoreAdapter(@NonNull Context context, List<Score> scores) {
         super(context, 0, scores);
     }

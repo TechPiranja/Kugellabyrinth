@@ -15,18 +15,51 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+/**
+ * The type Game activity.
+ */
 public class GameActivity extends AppCompatActivity implements EventListener{
 
+    /**
+     * The Sqlite manager.
+     */
     SQLiteManager sqliteManager;
+    /**
+     * The Timer text view.
+     */
     TextView timerTextView;
+    /**
+     * The Timer handler.
+     */
     Handler timerHandler = new Handler();
+    /**
+     * The Timer started.
+     */
     Boolean timerStarted = false;
+    /**
+     * The Time spent.
+     */
     int timeSpent;
+    /**
+     * The Start time.
+     */
     long startTime = 0;
+    /**
+     * The Sound player.
+     */
     SoundPlayer soundPlayer;
+    /**
+     * The Pref.
+     */
     SharedPreferences pref;
+    /**
+     * The Game title.
+     */
     TextView gameTitle;
 
+    /**
+     * The Timer runnable.
+     */
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
@@ -62,12 +95,18 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         });
     }
 
+    /**
+     * Start timer.
+     */
     public void StartTimer() {
         timerStarted = true;
         startTime = System.currentTimeMillis();
         timerHandler.postDelayed(timerRunnable, 0);
     }
 
+    /**
+     * Stop timer.
+     */
     public void StopTimer() {
         // stop timer
         timerStarted = false;
@@ -85,7 +124,12 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         sqliteManager.addScoreToDB(newScore);
     }
 
+    /**
+     * Open scoreboard.
+     */
     public void OpenScoreboard() {
+        timerStarted = false;
+        timerHandler.removeCallbacks(timerRunnable);
         Intent intent = new Intent(this, ScoreboardActivity.class);
         intent.putExtra("ACTION","Refresh-List");
         startActivity(intent);
@@ -121,7 +165,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent.getStringExtra("ACTION").equals("Restart-Game")){
+        if(intent.getStringExtra("ACTION").equals("Start-Game")){
             StartTimer();
             GameFieldFragment.currentLevel = (GameFieldFragment.currentLevel + 1) % 5;
             gameTitle.setText("Level " + (GameFieldFragment.currentLevel + 1));

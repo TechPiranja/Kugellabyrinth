@@ -61,11 +61,13 @@ public class MenuActivity extends AppCompatActivity{
         final Button startGame = findViewById(R.id.startGame);
 
         client = MQTTClient.getInstance();
-        String serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
+        client.serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
         startGame.setOnClickListener(v -> {
-            if (MQTTClient.usingMQTT){
-                client.connect(serverUri);
-                client.publish("sensehat/message", "start");
+            if (MQTTClient.usingMQTT && client.client == null){
+                client.connect();
+            }
+            if (MQTTClient.usingMQTT && !client.client.isConnected()){
+                client.connect();
             }
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
@@ -84,11 +86,11 @@ public class MenuActivity extends AppCompatActivity{
         sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 mqttAdressText.setEnabled(true);
-                client.usingMQTT = true;
+                MQTTClient.usingMQTT = true;
             } else {
                 mqttAdressText.setEnabled(false);
-                if (client.usingMQTT && client.isConnected) {
-                    client.usingMQTT = false;
+                if (MQTTClient.usingMQTT) {
+                    MQTTClient.usingMQTT = false;
                     client.disconnect();
                 }
             }
@@ -103,11 +105,14 @@ public class MenuActivity extends AppCompatActivity{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                pref.edit().putString(mqttAddress, s.toString()).commit();
+                client.serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 pref.edit().putString(mqttAddress, s.toString()).commit();
+                client.serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
             }
         });
         usernameText.addTextChangedListener(new TextWatcher() {

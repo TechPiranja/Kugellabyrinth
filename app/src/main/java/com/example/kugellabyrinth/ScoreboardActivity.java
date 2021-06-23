@@ -59,9 +59,15 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
         final ImageButton rightLevelButton = findViewById(R.id.rightLevel);
         setScoreAdapter();
 
+        final ImageButton openMenu = findViewById(R.id.openMenu);
+        openMenu.setOnClickListener(v -> {
+            Intent menuScreen = new Intent(this, MenuActivity.class);
+            startActivity(menuScreen);
+        });
+
         final Button button = findViewById(R.id.button);
         button.setOnClickListener(v -> {
-            intent.putExtra("ACTION","Restart-Game");
+            intent.putExtra("ACTION","Start-Game");
             startActivity(intent);
         });
         leftLevelButton.setOnClickListener(v -> {
@@ -70,7 +76,6 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
             if (levelToDisplay < 0)
                 levelToDisplay = 5 + levelToDisplay;
             setScoreAdapter(levelToDisplay);
-            System.out.println(levelToDisplay);
 
             // adding + 1 so the user sees numbers starting at 1 and not 0
             levelText.setText("Level " + (levelToDisplay + 1));
@@ -80,7 +85,6 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
             // +1 for getting the next level
             levelToDisplay = (levelToDisplay + 1) % 5;
             setScoreAdapter(levelToDisplay);
-            System.out.println(levelToDisplay);
 
             // adding + 1 so the user sees numbers starting at 1 and not 0
             levelText.setText("Level " + (levelToDisplay + 1));

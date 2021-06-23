@@ -30,6 +30,8 @@ public class GameView extends View {
     public GameView(Context context) {
         super(context);
         this.context = context;
+        user.x = 0;
+        user.y = 0;
         wallPaint = new Paint();
         wallPaint.setColor(Color.BLACK);
 

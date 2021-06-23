@@ -9,43 +9,65 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+/**
+ * The type Mqtt client.
+ */
 public class MQTTClient {
 
-    private static final String sub_topic = "sensor/data";      // ggf. Anpassen
-    private static final String pub_topic = "sensehat/message"; // ggf. Anpassen
+    private static final String sub_topic = "sensor/data";
+    private static final String pub_topic = "sensehat/message";
+    /**
+     * The constant qos.
+     */
     public static int qos = 0; // MQTT quality of service
     private String clientId;
     private MemoryPersistence persistence;
+    /**
+     * The Client.
+     */
     public MqttClient client;
+    /**
+     * The constant usingMQTT.
+     */
     public static Boolean usingMQTT = false;
-    public static Boolean isConnected = false;
+    /**
+     * The constant serverUri.
+     */
+    public static String serverUri = "";
 
     private static MQTTClient instance;
 
+    /**
+     * Instantiates a new Mqtt client.
+     */
     public MQTTClient() {
         persistence = new MemoryPersistence();
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static MQTTClient getInstance () {
         if (MQTTClient.instance == null) {
             MQTTClient.instance = new MQTTClient();
         }
         return MQTTClient.instance;
     }
+
     /**
-     * Connect to broker and
-     * @param broker Broker to connect to
+     * Connect.
      */
-    public void connect (String broker) {
+    public void connect () {
         try {
             clientId = MqttClient.generateClientId();
-            client = new MqttClient(broker, clientId, persistence);
+            client = new MqttClient(serverUri, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
-            Log.d("TEST", "Connecting to broker: " + broker);
+            Log.d("TEST", "Connecting to broker: " + serverUri);
             client.connect(connOpts);
-            isConnected = true;
-            Log.d("TEST", "Connected with broker: " + broker);
+            Log.d("TEST", "Connected with broker: " + serverUri);
         } catch (MqttException me) {
             Log.e("TEST", "Reason: " + me.getReasonCode());
             Log.e("TEST", "Message: " + me.getMessage());
@@ -57,6 +79,7 @@ public class MQTTClient {
 
     /**
      * Subscribes to a given topic
+     *
      * @param topic Topic to subscribe to
      */
     public void subscribe(String topic) {
@@ -76,8 +99,9 @@ public class MQTTClient {
 
     /**
      * Publishes a message via MQTT (with fixed topic)
+     *
      * @param topic topic to publish with
-     * @param msg message to publish with publish topic
+     * @param msg   message to publish with publish topic
      */
     public void publish(String topic, String msg) {
         MqttMessage message = new MqttMessage(msg.getBytes());
@@ -86,6 +110,19 @@ public class MQTTClient {
             client.publish(topic, message);
         } catch (MqttException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Unsubscribe all.
+     */
+    public void unsubscribeAll(){
+        try {
+            client.unsubscribe(sub_topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+            Log.e("TEST", e.getMessage());
         }
     }
 
@@ -103,7 +140,6 @@ public class MQTTClient {
         try {
             Log.d("TEST", "Disconnecting from broker");
             client.disconnect();
-            isConnected = false;
             Log.d("TEST", "Disconnected.");
         } catch (MqttException me) {
             Log.e("TEST", me.getMessage());

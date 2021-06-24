@@ -113,19 +113,6 @@ public class MQTTClient {
         }
     }
 
-
-    /**
-     * Unsubscribe all.
-     */
-    public void unsubscribeAll(){
-        try {
-            client.unsubscribe(sub_topic);
-        } catch (MqttException e) {
-            e.printStackTrace();
-            Log.e("TEST", e.getMessage());
-        }
-    }
-
     /**
      * Unsubscribe from default topic (please unsubscribe from further
      * topics prior to calling this function)

@@ -87,7 +87,7 @@ public class GameFieldFragment extends Fragment {
                         stopMessage = true;
                         gameView.ResetPlayerPoint();
                         listener.sendDataToActivity("Stop-Timer");
-                        client.publish("sensehat/message", "blinken");
+                        new Thread(() -> client.publish("sensehat/message", "blinken")).start();
                     }
                 }
             });

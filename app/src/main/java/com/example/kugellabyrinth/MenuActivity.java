@@ -63,12 +63,6 @@ public class MenuActivity extends AppCompatActivity{
         client = MQTTClient.getInstance();
         client.serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
         startGame.setOnClickListener(v -> {
-            if (MQTTClient.usingMQTT && client.client == null){
-                client.connect();
-            }
-            if (MQTTClient.usingMQTT && !client.client.isConnected()){
-                client.connect();
-            }
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
         });
@@ -91,7 +85,6 @@ public class MenuActivity extends AppCompatActivity{
                 mqttAdressText.setEnabled(false);
                 if (MQTTClient.usingMQTT) {
                     MQTTClient.usingMQTT = false;
-                    client.disconnect();
                 }
             }
             System.out.println("Switch MQTT: " + MQTTClient.usingMQTT);

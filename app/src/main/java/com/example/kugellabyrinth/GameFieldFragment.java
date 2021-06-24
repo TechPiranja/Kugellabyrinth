@@ -40,28 +40,6 @@ public class GameFieldFragment extends Fragment {
         gameView = new GameView(getActivity());
         client = MQTTClient.getInstance();
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        if (MQTTClient.usingMQTT){
-            subscribe("sensor/data");
-        }
-        else {
-            accelerometer = new Accelerometer() {
-                @Override
-                public void onAccelerationChange(float x, float y) {
-                if (gameView.user.x != 0 && gameView.user.y != 0 && !isGameRunning) {
-                    isGameRunning = true;
-                    listener.sendDataToActivity("Start-Timer");
-                }
-                if (gameView.user.x == 19 && gameView.user.y == 20 && isGameRunning)
-                {
-                    isGameRunning = false;
-                    gameView.ResetPlayerPoint();
-                    listener.sendDataToActivity("Stop-Timer");
-                }
-                gameView.PlayerInput(x, y);
-                }
-            };
-            accelerometer.setGravitationalConstant(SensorManager.GRAVITY_EARTH);
-        }
         return gameView;
     }
 
@@ -108,7 +86,6 @@ public class GameFieldFragment extends Fragment {
             stopMessage = false;
             client.connect();
             subscribe("sensor/data");
-            client.publish("sensehat/message", "start");
             System.out.println("Subscribed to data");
         }
         else {

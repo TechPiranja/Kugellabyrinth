@@ -25,7 +25,7 @@ public class MQTTClient {
     /**
      * The Client.
      */
-    public MqttClient client;
+    public static MqttClient client;
     /**
      * The constant usingMQTT.
      */
@@ -120,6 +120,7 @@ public class MQTTClient {
     public void disconnect() {
         try {
             client.unsubscribe(sub_topic);
+            Log.d("TEST", "unsubscribed topic");
         } catch (MqttException e) {
             e.printStackTrace();
             Log.e("TEST", e.getMessage());

@@ -5,13 +5,13 @@
     <item>
 
         <shape  android:shape="rectangle">
-            <padding android:bottom="10dp"
-                android:top="10dp"
+            <padding android:bottom="5dp"
+                android:top="5dp"
                 android:left="10dp"
                 android:right="10dp"/>
 
             <!--            Button TOP Color -->
-            <solid android:color="#B196D6" />
+            <solid android:color="#fff" />
             <corners android:radius="7dp" />
         </shape>
 

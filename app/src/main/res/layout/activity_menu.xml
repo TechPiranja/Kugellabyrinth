@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#5a378a">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#fff"
         android:textSize="40dp"
+        android:fontFamily="@font/lobster_two"
         android:gravity="center"
         android:layout_marginTop="50dp"
         android:text="Kugellabyrinth" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="25dp"
+        android:textColor="#fff"
+        android:textSize="20dp"
         android:gravity="center"
         android:layout_marginBottom="50dp"
         android:text="Studienarbeit - Anja Stricker" />
@@ -21,19 +25,27 @@
     <Button
         android:id="@+id/startGame"
         android:layout_width="250dp"
+        android:textColor="#000"
+        android:layout_margin="5dp"
         android:layout_gravity="center"
+        android:background="@drawable/round_button"
         android:layout_height="wrap_content"
         android:text="Start Game" />
 
     <Button
         android:id="@+id/openScoreboard"
         android:layout_width="250dp"
+        android:background="@drawable/round_button"
+        android:textColor="#000"
+        android:layout_margin="5dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Scoreboard" />
 
     <ImageButton
         android:id="@+id/soundToggle"
+        android:background="#fff"
+        android:textColor="#2d1b00"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
@@ -48,6 +60,7 @@
         android:ems="10"
         android:layout_marginTop="50dp"
         android:inputType="textPersonName"
+        android:textColor="#fff"
         android:text="Username" />
 
     <EditText
@@ -56,6 +69,7 @@
         android:layout_gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
+        android:textColor="#fff"
         android:ems="10"
         android:digits="0123456789."
         android:enabled="false"
@@ -72,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
             android:text="Use integrated Sensors"
-            android:textColor="#000"/>
+            android:textColor="#fff"/>
         <Switch
             android:id="@+id/sensorSwitch"
             android:layout_width="match_parent"
@@ -83,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"
             android:text="Use MQTT"
-            android:textColor="#000"/>
+            android:textColor="#fff"/>
 
     </LinearLayout>
 </LinearLayout>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#bbb">
+    android:background="#5a378a">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,6 +12,8 @@
             android:layout_width="match_parent"
             android:background="@color/cardview_light_background"
             android:layout_weight="1"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
             android:layout_height="0dp">
             <ImageButton
                 android:id="@+id/leftLevel"
@@ -41,7 +43,7 @@
         <ListView
             android:id="@+id/scoreListView"
             android:layout_width="match_parent"
-            android:layout_margin="10dp"
+            android:layout_marginHorizontal="20dp"
             android:layout_weight="10"
             android:layout_height="0dp"
             android:divider="@color/colorPrimaryDark"/>
@@ -49,7 +51,8 @@
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
-
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
             android:layout_weight="1"
             android:layout_height="0dp"
             android:background="#fff"

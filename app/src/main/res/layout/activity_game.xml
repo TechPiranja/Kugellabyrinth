@@ -4,41 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#bbb"
+    android:background="#5a378a"
     tools:context=".GameActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/gameTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/cardview_light_background"
-            android:textSize="40dp"
-            android:text="Level 1" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff">
+                <TextView
+                    android:id="@+id/gameTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:text="Level 1"
+                    android:layout_weight="1"/>
+                <ImageButton
+                    android:id="@+id/openMenu"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/menu" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/timerTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:text="Timer" />
+
+            <TextView
+                android:id="@+id/timerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:text="Timer" />
+        </LinearLayout>
+
 
         <fragment
             android:id="@+id/gameField"
             android:name="com.example.kugellabyrinth.GameFieldFragment"
             android:layout_width="wrap_content"
-            android:layout_height="500dp" />
-
-        <ImageButton
-            android:id="@+id/openMenu"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/menu" />
+            android:layout_height="500dp"
+            android:layout_weight="9"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

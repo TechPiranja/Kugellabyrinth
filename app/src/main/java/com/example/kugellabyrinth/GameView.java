@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class GameView extends View {
 
     Context context;
-    private Paint wallPaint, spacePaint, playerPaint, startPaint, finishPaint;
+    private Paint wallPaint, spacePaint, playerPaint, startPaint, endPaint;
     private int COLS = 21, ROWS = 21;
     private int hMargin, vMargin;
     private int cellSize;
@@ -30,7 +30,7 @@ public class GameView extends View {
     public GameView(Context context) {
         super(context);
         this.context = context;
-        user.x = 0;
+        user.x = 1;
         user.y = 0;
         wallPaint = new Paint();
         wallPaint.setColor(Color.BLACK);
@@ -41,8 +41,8 @@ public class GameView extends View {
         startPaint = new Paint();
         startPaint.setColor(Color.BLUE);
 
-        finishPaint = new Paint();
-        finishPaint.setColor(Color.GREEN);
+        endPaint = new Paint();
+        endPaint.setColor(Color.GREEN);
 
         spacePaint = new Paint();
         spacePaint.setColor(Color.WHITE);
@@ -81,7 +81,7 @@ public class GameView extends View {
     }
 
     public void ResetPlayerPoint() {
-        user.x = 0;
+        user.x = 1;
         user.y = 0;
     }
 
@@ -91,23 +91,22 @@ public class GameView extends View {
     }
 
     public void PlayerInput(float x, float y) {
-        System.out.println(x + ", "+ y);
         if (System.currentTimeMillis() < end) return;
         start = System.currentTimeMillis();
         end = start + speed;
 
-        if (y > 0.5f && user.y <= ROWS-2 && mazeArray[(int) user.x][(int) user.y+1] == ' '){
+        if (y > 0.5f && user.y <= ROWS-2 && mazeArray[(int) user.x][(int) user.y+1] != '#'){
             user.y = user.y + 1;
             invalidate();
-        } else if (y < -0.5f && user.y > 1 && mazeArray[(int) user.x][(int) user.y-1] == ' ') {
+        } else if (y < -0.5f && user.y > 1 && mazeArray[(int) user.x][(int) user.y-1] != '#') {
             user.y = user.y - 1;
             invalidate();
         }
 
-        if (x < 0.5f && user.x <= COLS-2 && mazeArray[(int) user.x+1][(int) user.y] == ' '){
+        if (x < 0.5f && user.x <= COLS-2 && mazeArray[(int) user.x+1][(int) user.y] != '#'){
             user.x = user.x + 1;
             invalidate();
-        } else if (x > -0.5f && user.x > 1 && mazeArray[(int) user.x-1][(int) user.y] == ' ') {
+        } else if (x > -0.5f && user.x > 1 && mazeArray[(int) user.x-1][(int) user.y] != '#') {
             user.x = user.x - 1;
             invalidate();
         }
@@ -137,6 +136,10 @@ public class GameView extends View {
                     canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, wallPaint);
                 } else if(mazeArray[x][y] == ' ') {
                     canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, spacePaint);
+                } else if(mazeArray[x][y] == 's') {
+                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, startPaint);
+                } else if(mazeArray[x][y] == 'e') {
+                    canvas.drawRect(x*cellSize,y*cellSize,(x+1)*cellSize,(y+1)*cellSize, endPaint);
                 }
             }
         }

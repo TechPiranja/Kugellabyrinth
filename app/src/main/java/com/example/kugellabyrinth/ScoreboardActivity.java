@@ -18,22 +18,16 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
     private Intent intent;
     private ListView scoreListView;
     private int levelToDisplay = 1;
+    TextView levelText;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(intent.getStringExtra("ACTION").equals("Refresh-List")){
-            setScoreAdapter();
+            setScoreAdapter(GameFieldFragment.currentLevel);
+            levelText.setText("Level " + (GameFieldFragment.currentLevel + 1));
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void setScoreAdapter() {
-        Score.scoreArrayList.sort((Score s1, Score s2)->s1.getTimeSpent()-s2.getTimeSpent());
-        ArrayList<Score> filteredScoreList = Score.getScoresForLevel(GameFieldFragment.currentLevel+1);
-        ScoreAdapter scoreAdapter = new ScoreAdapter(getApplicationContext(), filteredScoreList);
-        scoreListView.setAdapter(scoreAdapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -53,11 +47,11 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
 
         intent = new Intent(this, GameActivity.class);
         scoreListView = findViewById(R.id.scoreListView);
-        TextView levelText = findViewById(R.id.levelText);
-        levelText.setText("Level " + 1);
+        levelText = findViewById(R.id.levelText);
+        levelText.setText("Level " + (GameFieldFragment.currentLevel + 1));
         final ImageButton leftLevelButton = findViewById(R.id.leftLevel);
         final ImageButton rightLevelButton = findViewById(R.id.rightLevel);
-        setScoreAdapter();
+        setScoreAdapter(GameFieldFragment.currentLevel);
 
         final ImageButton openMenu = findViewById(R.id.openMenu);
         openMenu.setOnClickListener(v -> {

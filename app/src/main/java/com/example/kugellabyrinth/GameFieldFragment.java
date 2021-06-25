@@ -81,6 +81,7 @@ public class GameFieldFragment extends Fragment {
         super.onResume();
         gameView.ResetPlayerPoint();
         gameView.loadNextLevel(currentLevel);
+        System.out.println(currentLevel);
         client = MQTTClient.getInstance();
         if  (MQTTClient.usingMQTT){
             stopMessage = false;

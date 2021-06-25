@@ -56,6 +56,6 @@
             android:name="com.example.kugellabyrinth.GameFieldFragment"
             android:layout_width="wrap_content"
             android:layout_height="500dp"
-            android:layout_weight="9"/>
+            android:layout_weight="1"/>
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

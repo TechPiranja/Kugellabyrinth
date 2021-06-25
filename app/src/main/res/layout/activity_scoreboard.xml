@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:textColor="#fff"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:text="Level 1"
                 android:layout_weight="1"
                 android:textSize="30dp"
@@ -48,7 +48,7 @@
             android:id="@+id/scoreListView"
             android:layout_width="match_parent"
             android:layout_marginHorizontal="20dp"
-            android:layout_weight="10"
+            android:layout_weight="8"
             android:layout_height="0dp"
             android:layout_marginVertical="5dp"
             android:divider="@color/colorPrimaryDark"/>

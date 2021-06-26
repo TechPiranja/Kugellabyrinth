@@ -18,14 +18,15 @@ import java.util.ArrayList;
  */
 public class ScoreboardActivity extends AppCompatActivity{
 
-    private Intent intent;
+    private Intent gamescreen;
     private ListView scoreListView;
     private int levelToDisplay = 1;
-    /**
-     * The Level text.
-     */
-    TextView levelText;
+    private TextView levelText;
 
+    /**
+     * Fills the ScoreList and sets correct level text on Activity load
+     * @param intent
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onNewIntent(Intent intent) {
@@ -36,6 +37,10 @@ public class ScoreboardActivity extends AppCompatActivity{
         }
     }
 
+    /**
+     * Fills the ScoreList with the ScoreArrayList Data
+     * @param level
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setScoreAdapter(int level) {
         Score.scoreArrayList.sort((Score s1, Score s2)->s1.getTimeSpent()-s2.getTimeSpent());
@@ -47,28 +52,44 @@ public class ScoreboardActivity extends AppCompatActivity{
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        levelToDisplay = GameFieldFragment.currentLevel;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scoreboard);
 
-        intent = new Intent(this, GameActivity.class);
-        scoreListView = findViewById(R.id.scoreListView);
+        // gets the levelToDisplay from the GameFieldFragment
+        levelToDisplay = GameFieldFragment.currentLevel;
         levelText = findViewById(R.id.levelText);
-        levelText.setText("Level " + (GameFieldFragment.currentLevel + 1));
+
+        // sets LevelText
+        levelText.setText("Level " + (levelToDisplay + 1));
+
+        // fills the scoreList
+        scoreListView = findViewById(R.id.scoreListView);
+        setScoreAdapter(levelToDisplay);
+
+        gamescreen = new Intent(this, GameActivity.class);
+        initButtons();
+    }
+
+    /**
+     * gets all Buttons and sets onClickListeners
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void initButtons(){
+        // gets all buttons
         final ImageButton leftLevelButton = findViewById(R.id.leftLevel);
         final ImageButton rightLevelButton = findViewById(R.id.rightLevel);
-        setScoreAdapter(GameFieldFragment.currentLevel);
-
         final ImageButton openMenu = findViewById(R.id.openMenu);
+        final Button nextLevelButton = findViewById(R.id.nextLevel);
+
+
+        // declare all button onClickListeners
         openMenu.setOnClickListener(v -> {
             Intent menuScreen = new Intent(this, MenuActivity.class);
             startActivity(menuScreen);
         });
-
-        final Button nextLevelButton = findViewById(R.id.nextLevel);
         nextLevelButton.setOnClickListener(v -> {
-            intent.putExtra("ACTION","Start-Game");
-            startActivity(intent);
+            gamescreen.putExtra("ACTION","Start-Game");
+            startActivity(gamescreen);
         });
         leftLevelButton.setOnClickListener(v -> {
             // -1 for getting the last level

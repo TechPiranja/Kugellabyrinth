@@ -86,6 +86,7 @@ public class GameFieldFragment extends Fragment {
                     String[] msgArray = message.split(", ", 3);
 
 
+                    // TODO test if mqtt still works with new modified maze (starting at 1, 0 and not 0,0)
                     if (gameView.user.x == 0 && gameView.user.y == 0 && !isGameRunning && !stopMessage) {
                         listener.sendDataToActivity("Start-Timer");
                         isGameRunning = true;

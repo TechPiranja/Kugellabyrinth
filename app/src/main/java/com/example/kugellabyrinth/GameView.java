@@ -12,21 +12,31 @@ import androidx.annotation.RequiresApi;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The GameView which draws the Maze and Player on a Canvas
+ */
 public class GameView extends View {
 
-    Context context;
+    private Context context;
     private Paint wallPaint, spacePaint, playerPaint, startPaint, endPaint;
     private int COLS = 21, ROWS = 21;
     private int hMargin, vMargin;
     private int cellSize;
+    /**
+     * The Player Position
+     */
     public Player user = new Player();
     private char[] maze;
     private char[][] mazeArray;
+    private long start = System.currentTimeMillis();
+    private int speed = 100;
+    private long end = start + speed;
 
-    long start = System.currentTimeMillis();
-    int speed = 100;
-    long end = start + speed;
-
+    /**
+     * Instantiates a new Game view.
+     *
+     * @param context the context
+     */
     public GameView(Context context) {
         super(context);
         this.context = context;
@@ -52,6 +62,9 @@ public class GameView extends View {
         convertMaze();
     }
 
+    /**
+     * reads the Maze out of a textfile with the correct level
+     */
     private void readMaze(int level) {
         try {
             InputStream is = context.getAssets().open("mazeGen" + level + ".txt");
@@ -66,6 +79,9 @@ public class GameView extends View {
         }
     }
 
+    /**
+     * converts the maze from the textfile into a 2D array
+     */
     private void convertMaze() {
         int y = 0;
         int x = 0;
@@ -80,16 +96,30 @@ public class GameView extends View {
         }
     }
 
+    /**
+     * Reset player point.
+     */
     public void ResetPlayerPoint() {
         user.x = 1;
         user.y = 0;
     }
 
+    /**
+     * Load next level from textfile and draw it onto the canvas
+     *
+     * @param level the level
+     */
     public void loadNextLevel(int level){
         readMaze(level);
         convertMaze();
     }
 
+    /**
+     * Sets the new Player Position
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void PlayerInput(float x, float y) {
         if (System.currentTimeMillis() < end) return;
         start = System.currentTimeMillis();
@@ -112,6 +142,10 @@ public class GameView extends View {
         }
     }
 
+    /**
+     * Draws the maze and the player onto the canvas
+     * @param canvas
+     */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onDraw(Canvas canvas) {

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class ScoreboardActivity extends AppCompatActivity implements EventListener{
+public class ScoreboardActivity extends AppCompatActivity{
 
     private Intent intent;
     private ListView scoreListView;
@@ -83,10 +83,5 @@ public class ScoreboardActivity extends AppCompatActivity implements EventListen
             // adding + 1 so the user sees numbers starting at 1 and not 0
             levelText.setText("Level " + (levelToDisplay + 1));
         });
-    }
-
-    @Override
-    public void sendDataToActivity(String data) {
-
     }
 }

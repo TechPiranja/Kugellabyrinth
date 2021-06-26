@@ -65,15 +65,15 @@ public class MQTTClient {
             client = new MqttClient(serverUri, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
-            Log.d("TEST", "Connecting to broker: " + serverUri);
+            Log.d("MQTT", "Connecting to broker: " + serverUri);
             client.connect(connOpts);
-            Log.d("TEST", "Connected with broker: " + serverUri);
+            Log.d("MQTT", "Connected with broker: " + serverUri);
         } catch (MqttException me) {
-            Log.e("TEST", "Reason: " + me.getReasonCode());
-            Log.e("TEST", "Message: " + me.getMessage());
-            Log.e("TEST", "localizedMsg: " + me.getLocalizedMessage());
-            Log.e("TEST", "cause: " + me.getCause());
-            Log.e("TEST", "exception: " + me);
+            Log.e("MQTT", "Reason: " + me.getReasonCode());
+            Log.e("MQTT", "Message: " + me.getMessage());
+            Log.e("MQTT", "localizedMsg: " + me.getLocalizedMessage());
+            Log.e("MQTT", "cause: " + me.getCause());
+            Log.e("MQTT", "exception: " + me);
         }
     }
 
@@ -88,10 +88,10 @@ public class MQTTClient {
                 @Override
                 public void messageArrived(String topic, MqttMessage msg) throws Exception {
                     String message = new String(msg.getPayload());
-                    Log.d("TEST", "Message with topic " + topic + " arrived: " + message);
+                    Log.d("MQTT", "Message with topic " + topic + " arrived: " + message);
                 }
             });
-            Log.d("TEST", "subscribed to topic " + topic);
+            Log.d("MQTT", "subscribed to topic " + topic);
         } catch (MqttException e) {
             e.printStackTrace();
         }
@@ -120,17 +120,17 @@ public class MQTTClient {
     public void disconnect() {
         try {
             client.unsubscribe(sub_topic);
-            Log.d("TEST", "unsubscribed topic");
+            Log.d("MQTT", "unsubscribed topic");
         } catch (MqttException e) {
             e.printStackTrace();
-            Log.e("TEST", e.getMessage());
+            Log.e("MQTT", e.getMessage());
         }
         try {
-            Log.d("TEST", "Disconnecting from broker");
+            Log.d("MQTT", "Disconnecting from broker");
             client.disconnect();
-            Log.d("TEST", "Disconnected.");
+            Log.d("MQTT", "Disconnected.");
         } catch (MqttException me) {
-            Log.e("TEST", me.getMessage());
+            Log.e("MQTT", me.getMessage());
         }
     }
 }

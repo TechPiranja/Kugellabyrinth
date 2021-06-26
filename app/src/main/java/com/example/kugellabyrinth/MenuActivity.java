@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -19,14 +20,38 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+/**
+ * The type Menu activity.
+ */
 public class MenuActivity extends AppCompatActivity{
 
+    /**
+     * The Sound player.
+     */
     SoundPlayer soundPlayer;
+    /**
+     * The Is sound muted.
+     */
     Boolean isSoundMuted = false;
+    /**
+     * The First load.
+     */
     Boolean firstLoad = true;
+    /**
+     * The Timer text view.
+     */
     TextView timerTextView;
+    /**
+     * The constant mqttAddress.
+     */
     public static final String mqttAddress = "127.0.0.1";
+    /**
+     * The constant username.
+     */
     public static final String username = "Unknown";
+    /**
+     * The Client.
+     */
     MQTTClient client;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -39,7 +64,6 @@ public class MenuActivity extends AppCompatActivity{
         soundPlayer = SoundPlayer.getInstance(this);
 
         if (firstLoad) {
-            System.out.println("loaded from DB");
             loadFromDBToMemory();
             firstLoad = false;
         }
@@ -87,7 +111,7 @@ public class MenuActivity extends AppCompatActivity{
                     MQTTClient.usingMQTT = false;
                 }
             }
-            System.out.println("Switch MQTT: " + MQTTClient.usingMQTT);
+            Log.d("MQTT", "Switching Sensor. MQTT is " + MQTTClient.usingMQTT);
         });
         usernameText.setText(pref.getString(username, "Unknown"));
         mqttAdressText.setText(pref.getString(mqttAddress, "127.0.0.1"));

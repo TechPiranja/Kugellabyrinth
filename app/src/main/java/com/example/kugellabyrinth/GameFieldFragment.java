@@ -7,6 +7,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,6 @@ public class GameFieldFragment extends Fragment {
 
     public void subscribe(String topic) {
         try {
-            System.out.println("Trying to subscribe");
             client.client.subscribe(topic, client.qos, new IMqttMessageListener() {
                 @Override
                 public void messageArrived(String topic, MqttMessage msg) throws Exception {
@@ -69,10 +69,9 @@ public class GameFieldFragment extends Fragment {
                     }
                 }
             });
-            System.out.println("Done subscribe");
         } catch (MqttException e) {
             e.printStackTrace();
-            System.out.println(e);
+            Log.d("MQTT", "Error on Subscribe. Error: " + e);
         }
     }
 
@@ -81,13 +80,11 @@ public class GameFieldFragment extends Fragment {
         super.onResume();
         gameView.ResetPlayerPoint();
         gameView.loadNextLevel(currentLevel);
-        System.out.println(currentLevel);
         client = MQTTClient.getInstance();
         if  (MQTTClient.usingMQTT){
             stopMessage = false;
             client.connect();
             subscribe("sensor/data");
-            System.out.println("Subscribed to data");
         }
         else {
             accelerometer = new Accelerometer() {

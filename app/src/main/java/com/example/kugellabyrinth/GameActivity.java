@@ -152,7 +152,6 @@ public class GameActivity extends AppCompatActivity implements EventListener{
 
     @Override
     public void sendDataToActivity(String data) {
-        System.out.println("Event" + data);
         if (data == "Start-Timer" && !timerStarted)
             StartTimer();
         if (data == "Stop-Timer" && timerStarted){

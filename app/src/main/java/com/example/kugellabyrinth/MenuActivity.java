@@ -16,10 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
-import android.widget.TextView;
 
 /**
- * The type Menu activity.
+ * This Activity can navigate to the Game and Scoreboard Screen
+ * It is able to Configure the Game with Username, Sound, SensorInput and the Broker-IP Address
  */
 public class MenuActivity extends AppCompatActivity{
 
@@ -35,10 +35,6 @@ public class MenuActivity extends AppCompatActivity{
      * The First load.
      */
     Boolean firstLoad = true;
-    /**
-     * The Timer text view.
-     */
-    TextView timerTextView;
     /**
      * The constant mqttAddress.
      */
@@ -60,21 +56,9 @@ public class MenuActivity extends AppCompatActivity{
      */
     Intent scoreBoardScreen;
     /**
-     * The Start game.
-     */
-    Button startGame;
-    /**
      * The Pref.
      */
     SharedPreferences pref;
-    /**
-     * The Open scoreboard.
-     */
-    Button openScoreboard;
-    /**
-     * The Sound toggle.
-     */
-    ImageButton soundToggle;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -108,19 +92,19 @@ public class MenuActivity extends AppCompatActivity{
      * Initializes all Buttons from Menu Screen.
      */
     private void initButtons(){
-        startGame = findViewById(R.id.startGame);
+        Button startGame = findViewById(R.id.startGame);
         startGame.setOnClickListener(v -> {
             gameScreen.putExtra("ACTION","Restart-Game");
             startActivity(gameScreen);
         });
 
-        openScoreboard = findViewById(R.id.openScoreboard);
+        Button openScoreboard = findViewById(R.id.openScoreboard);
         openScoreboard.setOnClickListener(v -> {
             scoreBoardScreen.putExtra("ACTION","Refresh-List");
             startActivity(scoreBoardScreen);
         });
 
-        soundToggle = findViewById(R.id.soundToggle);
+        ImageButton soundToggle = findViewById(R.id.soundToggle);
         soundToggle.setOnClickListener(v -> {
             isSoundMuted = !isSoundMuted;
             if (isSoundMuted) {
@@ -139,10 +123,10 @@ public class MenuActivity extends AppCompatActivity{
     private void initView(){
         initButtons();
 
-        Switch sensorSwitch = findViewById(R.id.sensorSwitch);
         EditText mqttAddressText = findViewById(R.id.mqttAddress);
-        EditText usernameText = findViewById(R.id.usernameText);
 
+
+        Switch sensorSwitch = findViewById(R.id.sensorSwitch);
         sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
                 mqttAddressText.setEnabled(true);
@@ -156,7 +140,6 @@ public class MenuActivity extends AppCompatActivity{
             Log.d("MQTT", "Switching Sensor. MQTT is " + MQTTClient.usingMQTT);
         });
 
-        usernameText.setText(pref.getString(username, "Unknown"));
         mqttAddressText.setText(pref.getString(mqttAddress, "127.0.0.1"));
         mqttAddressText.addTextChangedListener(new TextWatcher() {
 
@@ -175,6 +158,9 @@ public class MenuActivity extends AppCompatActivity{
                 client.serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
             }
         });
+
+        EditText usernameText = findViewById(R.id.usernameText);
+        usernameText.setText(pref.getString(username, "Unknown"));
         usernameText.addTextChangedListener(new TextWatcher() {
 
             @Override

@@ -113,9 +113,7 @@ public class GameFieldFragment extends Fragment {
         super.onPause();
         isGameRunning = false;
         if (client.usingMQTT)
-        {
             client.disconnect();
-        }
         else
             mSensorManager.unregisterListener(accelerometer);
     }

@@ -12,8 +12,6 @@ import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -53,22 +51,76 @@ public class MenuActivity extends AppCompatActivity{
      * The Client.
      */
     MQTTClient client;
+    /**
+     * The Game screen.
+     */
+    Intent gameScreen;
+    /**
+     * The Score board screen.
+     */
+    Intent scoreBoardScreen;
+    /**
+     * The Start game.
+     */
+    Button startGame;
+    /**
+     * The Pref.
+     */
+    SharedPreferences pref;
+    /**
+     * The Open scoreboard.
+     */
+    Button openScoreboard;
+    /**
+     * The Sound toggle.
+     */
+    ImageButton soundToggle;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_menu);
-        timerTextView = findViewById(R.id.timerTextView);
+
+        // getting single Instance of SoundPlayer in order to toggle sound config
         soundPlayer = SoundPlayer.getInstance(this);
 
+        // if the MenuScreen is started the first time, it should load the DB to the App Memory
         if (firstLoad) {
             loadFromDBToMemory();
             firstLoad = false;
         }
 
-        final ImageButton soundToggle = findViewById(R.id.soundToggle);
+        // getting intents in order to navigate to them
+        gameScreen = new Intent(this, GameActivity.class);
+        scoreBoardScreen = new Intent(this, ScoreboardActivity.class);
+
+        // getting single Instance of MQTTClient and setting default serverUri
+        client = MQTTClient.getInstance();
+        client.serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
+
+        // initializing all Buttons and Text Components
+        initView();
+    }
+
+    /**
+     * Initializes all Buttons from Menu Screen.
+     */
+    private void initButtons(){
+        startGame = findViewById(R.id.startGame);
+        startGame.setOnClickListener(v -> {
+            gameScreen.putExtra("ACTION","Restart-Game");
+            startActivity(gameScreen);
+        });
+
+        openScoreboard = findViewById(R.id.openScoreboard);
+        openScoreboard.setOnClickListener(v -> {
+            scoreBoardScreen.putExtra("ACTION","Refresh-List");
+            startActivity(scoreBoardScreen);
+        });
+
+        soundToggle = findViewById(R.id.soundToggle);
         soundToggle.setOnClickListener(v -> {
             isSoundMuted = !isSoundMuted;
             if (isSoundMuted) {
@@ -79,43 +131,34 @@ public class MenuActivity extends AppCompatActivity{
                 soundToggle.setImageResource(R.drawable.volume_on);
             }
         });
+    }
 
-        Intent gameScreen = new Intent(this, GameActivity.class);
-        Intent scoreBoardScreen = new Intent(this, ScoreboardActivity.class);
-        final Button startGame = findViewById(R.id.startGame);
-
-        client = MQTTClient.getInstance();
-        client.serverUri = "tcp://" + pref.getString(mqttAddress, "127.0.0.1") + ":1883";
-        startGame.setOnClickListener(v -> {
-            gameScreen.putExtra("ACTION","Restart-Game");
-            startActivity(gameScreen);
-        });
-
-        final Button openScoreboard = findViewById(R.id.openScoreboard);
-        openScoreboard.setOnClickListener(v -> {
-            scoreBoardScreen.putExtra("ACTION","Refresh-List");
-            startActivity(scoreBoardScreen);
-        });
+    /**
+     * Initializes all visible Components from Menu Screen.
+     */
+    private void initView(){
+        initButtons();
 
         Switch sensorSwitch = findViewById(R.id.sensorSwitch);
-        EditText mqttAdressText = findViewById(R.id.mqttAddress);
+        EditText mqttAddressText = findViewById(R.id.mqttAddress);
         EditText usernameText = findViewById(R.id.usernameText);
 
         sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked){
-                mqttAdressText.setEnabled(true);
+                mqttAddressText.setEnabled(true);
                 MQTTClient.usingMQTT = true;
             } else {
-                mqttAdressText.setEnabled(false);
+                mqttAddressText.setEnabled(false);
                 if (MQTTClient.usingMQTT) {
                     MQTTClient.usingMQTT = false;
                 }
             }
             Log.d("MQTT", "Switching Sensor. MQTT is " + MQTTClient.usingMQTT);
         });
+
         usernameText.setText(pref.getString(username, "Unknown"));
-        mqttAdressText.setText(pref.getString(mqttAddress, "127.0.0.1"));
-        mqttAdressText.addTextChangedListener(new TextWatcher() {
+        mqttAddressText.setText(pref.getString(mqttAddress, "127.0.0.1"));
+        mqttAddressText.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -153,20 +196,5 @@ public class MenuActivity extends AppCompatActivity{
     private void loadFromDBToMemory() {
         SQLiteManager sqliteManager = SQLiteManager.instanceOfDatabase(this);
         sqliteManager.populateScoreListArray();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

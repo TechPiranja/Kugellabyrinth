@@ -78,26 +78,6 @@ public class MQTTClient {
     }
 
     /**
-     * Subscribes to a given topic
-     *
-     * @param topic Topic to subscribe to
-     */
-    public void subscribe(String topic) {
-        try {
-            client.subscribe(topic, qos, new IMqttMessageListener() {
-                @Override
-                public void messageArrived(String topic, MqttMessage msg) throws Exception {
-                    String message = new String(msg.getPayload());
-                    Log.d("MQTT", "Message with topic " + topic + " arrived: " + message);
-                }
-            });
-            Log.d("MQTT", "subscribed to topic " + topic);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Publishes a message via MQTT (with fixed topic)
      *
      * @param topic topic to publish with

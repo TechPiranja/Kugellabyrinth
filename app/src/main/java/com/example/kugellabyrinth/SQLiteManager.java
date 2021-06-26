@@ -10,6 +10,9 @@ import android.os.Build;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+/**
+ * The type Sq lite manager.
+ */
 public class SQLiteManager extends SQLiteOpenHelper {
 
     private static SQLiteManager sqLiteManager;
@@ -24,10 +27,21 @@ public class SQLiteManager extends SQLiteOpenHelper {
     private static final String TIMESPENT_FIELD = "timeSpent";
     private static final String LEVEL_FIELD = "level";
 
+    /**
+     * Instantiates a new Sq lite manager.
+     *
+     * @param context the context
+     */
     public SQLiteManager(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Instance of database sq lite manager.
+     *
+     * @param context the context
+     * @return the sq lite manager
+     */
     public static SQLiteManager instanceOfDatabase(Context context){
         if(sqLiteManager == null)
             sqLiteManager = new SQLiteManager(context);
@@ -35,6 +49,9 @@ public class SQLiteManager extends SQLiteOpenHelper {
         return sqLiteManager;
     }
 
+    /**
+     * Populate score list array.
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void populateScoreListArray(){
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -53,6 +70,10 @@ public class SQLiteManager extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Creates the Score Table if the App was started the very first time (no db exists)
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         StringBuilder sql;
@@ -71,6 +92,11 @@ public class SQLiteManager extends SQLiteOpenHelper {
 //        }
     }
 
+    /**
+     * Add score to db.
+     *
+     * @param score the score
+     */
     public void addScoreToDB(Score score){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
 
@@ -83,6 +109,11 @@ public class SQLiteManager extends SQLiteOpenHelper {
         sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
     }
 
+    /**
+     * Update score in db.
+     *
+     * @param score the score
+     */
     public void updateScoreInDB(Score score){
         SQLiteDatabase sqliteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

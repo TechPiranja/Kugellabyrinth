@@ -60,6 +60,10 @@ public class MenuActivity extends AppCompatActivity{
      */
     SharedPreferences pref;
 
+    /**
+     * onCreate Function
+     * @param savedInstanceState
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

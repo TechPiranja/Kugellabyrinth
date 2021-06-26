@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -74,19 +72,32 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         }
     };
 
+    private void resetTimer(){
+        timerTextView.setText(String.format("%d:%02d", 0, 0));
+    }
+
+    /**
+     * onCreate Function
+     * @param savedInstanceState
+     */
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         setContentView(R.layout.activity_game);
+
+        // gets instances of classes and view components
         timerTextView = findViewById(R.id.timerTextView);
         soundPlayer = SoundPlayer.getInstance(this);
         Intent menuScreen = new Intent(this, MenuActivity.class);
         sqliteManager = SQLiteManager.instanceOfDatabase(this);
         gameTitle = findViewById(R.id.gameTitle);
+
+        // setting the gameTitle initially to Level 1
         gameTitle.setText("Level " + 1);
 
+        // setting the onClick function for the open menu imageButton
         final ImageButton openMenu = findViewById(R.id.openMenu);
         openMenu.setOnClickListener(v -> {
             timerStarted = false;
@@ -96,7 +107,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     }
 
     /**
-     * Start timer.
+     * Starts the Timer for the Level.
      */
     public void StartTimer() {
         timerStarted = true;
@@ -105,7 +116,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     }
 
     /**
-     * Stop timer.
+     * Stops the Timer for the Level. Will be saved in Database
      */
     public void StopTimer() {
         // stop timer
@@ -125,7 +136,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     }
 
     /**
-     * Open scoreboard.
+     * Opens Scoreboard with intent extra.
      */
     public void OpenScoreboard() {
         timerStarted = false;
@@ -135,37 +146,33 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         startActivity(intent);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * This EventListener is used by the GameFieldFragment to communicate with the activity
+     * @param data
+     */
     @Override
     public void sendDataToActivity(String data) {
+        // fragment sends start if the user tilted the device or controller
         if (data == "Start-Timer" && !timerStarted)
             StartTimer();
+
+        // fragment sends stop if the user reached the goal
         if (data == "Stop-Timer" && timerStarted){
             StopTimer();
             OpenScoreboard();
         }
     }
 
+    /**
+     *
+     * @param intent
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(intent.getStringExtra("ACTION").equals("Start-Game")){
-            StartTimer();
+            resetTimer();
             GameFieldFragment.currentLevel = (GameFieldFragment.currentLevel + 1) % 5;
             gameTitle.setText("Level " + (GameFieldFragment.currentLevel + 1));
         }

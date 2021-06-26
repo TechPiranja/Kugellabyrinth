@@ -16,15 +16,36 @@ import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+/**
+ * The type Game field fragment.
+ */
 public class GameFieldFragment extends Fragment {
 
     private GameView gameView;
+    /**
+     * The M sensor manager.
+     */
     SensorManager mSensorManager;
+    /**
+     * The Accelerometer.
+     */
     Accelerometer accelerometer;
     private EventListener listener;
+    /**
+     * The Is game running.
+     */
     Boolean isGameRunning = false;
+    /**
+     * The Stop message.
+     */
     Boolean stopMessage = false;
+    /**
+     * The Client.
+     */
     MQTTClient client;
+    /**
+     * The constant currentLevel.
+     */
     public static int currentLevel = 0;
 
     @Override
@@ -44,6 +65,11 @@ public class GameFieldFragment extends Fragment {
         return gameView;
     }
 
+    /**
+     * Subscribe.
+     *
+     * @param topic the topic
+     */
     public void subscribe(String topic) {
         try {
             client.client.subscribe(topic, client.qos, new IMqttMessageListener() {

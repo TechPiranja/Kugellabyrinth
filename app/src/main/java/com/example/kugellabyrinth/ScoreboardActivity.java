@@ -13,11 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
+/**
+ * The type Scoreboard activity.
+ */
 public class ScoreboardActivity extends AppCompatActivity{
 
     private Intent intent;
     private ListView scoreListView;
     private int levelToDisplay = 1;
+    /**
+     * The Level text.
+     */
     TextView levelText;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -59,8 +65,8 @@ public class ScoreboardActivity extends AppCompatActivity{
             startActivity(menuScreen);
         });
 
-        final Button button = findViewById(R.id.button);
-        button.setOnClickListener(v -> {
+        final Button nextLevelButton = findViewById(R.id.nextLevel);
+        nextLevelButton.setOnClickListener(v -> {
             intent.putExtra("ACTION","Start-Game");
             startActivity(intent);
         });

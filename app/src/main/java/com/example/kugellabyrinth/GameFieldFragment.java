@@ -48,6 +48,10 @@ public class GameFieldFragment extends Fragment {
      */
     public static int currentLevel = 0;
 
+    /**
+     * The EventListener which communicates between gamefragment and activity
+     * @param activity
+     */
     @Override
     public void onAttach(Activity activity)
     {
@@ -59,14 +63,17 @@ public class GameFieldFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // gets GameView which draws the maze and player
         gameView = new GameView(getActivity());
+        // gets singleton mqttclient instance
         client = MQTTClient.getInstance();
+        // gets sensormanager in order to controll ball with smartphone controller
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         return gameView;
     }
 
     /**
-     * Subscribe.
+     * Subscribes to the sensehat data and handles messageArrived
      *
      * @param topic the topic
      */
@@ -77,6 +84,7 @@ public class GameFieldFragment extends Fragment {
                 public void messageArrived(String topic, MqttMessage msg) throws Exception {
                     String message = new String(msg.getPayload());
                     String[] msgArray = message.split(", ", 3);
+
 
                     if (gameView.user.x == 0 && gameView.user.y == 0 && !isGameRunning && !stopMessage) {
                         listener.sendDataToActivity("Start-Timer");

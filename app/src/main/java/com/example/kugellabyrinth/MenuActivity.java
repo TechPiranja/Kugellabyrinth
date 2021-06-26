@@ -98,7 +98,7 @@ public class MenuActivity extends AppCompatActivity{
     private void initButtons(){
         Button startGame = findViewById(R.id.startGame);
         startGame.setOnClickListener(v -> {
-            gameScreen.putExtra("ACTION","Restart-Game");
+            gameScreen.putExtra("ACTION","Start-Game");
             startActivity(gameScreen);
         });
 

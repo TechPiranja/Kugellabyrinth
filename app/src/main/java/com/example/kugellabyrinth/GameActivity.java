@@ -56,7 +56,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     TextView gameTitle;
 
     /**
-     * The Timer runnable.
+     * The Timer runnable, which counts the time Played for the current Level.
      */
     Runnable timerRunnable = new Runnable() {
         @Override
@@ -72,6 +72,9 @@ public class GameActivity extends AppCompatActivity implements EventListener{
         }
     };
 
+    /**
+     * resets the TimerText to 0:00
+     */
     private void resetTimer(){
         timerTextView.setText(String.format("%d:%02d", 0, 0));
     }
@@ -116,14 +119,24 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     }
 
     /**
-     * Stops the Timer for the Level. Will be saved in Database
+     * Stops the Timer for the Level, plays winning sound and save score to Database
      */
     public void StopTimer() {
         // stop timer
         timerStarted = false;
         timerHandler.removeCallbacks(timerRunnable);
+
+        // play the winning sound
         soundPlayer.start();
 
+        // saving score to ScoreArrayList and Database
+        SaveScore();
+    }
+
+    /**
+     * Saves the Score to the ScoreArrayList and the Database
+     */
+    private void SaveScore(){
         // creating and adding score to scoreArrayList
         int id = Score.scoreArrayList.size();
         String username = "";
@@ -139,8 +152,6 @@ public class GameActivity extends AppCompatActivity implements EventListener{
      * Opens Scoreboard with intent extra.
      */
     public void OpenScoreboard() {
-        timerStarted = false;
-        timerHandler.removeCallbacks(timerRunnable);
         Intent intent = new Intent(this, ScoreboardActivity.class);
         intent.putExtra("ACTION","Refresh-List");
         startActivity(intent);
@@ -164,7 +175,7 @@ public class GameActivity extends AppCompatActivity implements EventListener{
     }
 
     /**
-     *
+     * If the Game Screen is started, reset the Timer and set the correct level text
      * @param intent
      */
     @RequiresApi(api = Build.VERSION_CODES.N)

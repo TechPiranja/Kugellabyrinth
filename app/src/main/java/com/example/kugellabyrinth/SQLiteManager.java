@@ -84,12 +84,16 @@ public class SQLiteManager extends SQLiteOpenHelper {
         db.execSQL(sql.toString());
     }
 
+    /**
+     * Function wich upgrades the db
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        switch (oldVersion){
-//            case 1:
-//              add new column on new version etc.
-//        }
+        // This App doesnt need it, but it has to be implemented,
+        // so the "extends SQLiteOpenHelper" line throws no error
     }
 
     /**
@@ -107,21 +111,5 @@ public class SQLiteManager extends SQLiteOpenHelper {
         contentValues.put(LEVEL_FIELD, score.getLevel());
 
         sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
-    }
-
-    /**
-     * Update score in db.
-     *
-     * @param score the score
-     */
-    public void updateScoreInDB(Score score){
-        SQLiteDatabase sqliteDatabase = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ID_FIELD, score.getId());
-        contentValues.put(USERNAME_FIELD, score.getUsername());
-        contentValues.put(TIMESPENT_FIELD, score.getTimeSpent());
-        contentValues.put(LEVEL_FIELD, score.getLevel());
-
-        sqliteDatabase.update(TABLE_NAME, contentValues, ID_FIELD + " =?", new String[]{String.valueOf(score.getId())});
     }
 }

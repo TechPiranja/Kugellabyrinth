@@ -28,11 +28,14 @@
                 android:id="@+id/levelText"
                 android:layout_width="wrap_content"
                 android:textColor="#fff"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Level 1"
                 android:layout_weight="1"
-                android:textSize="30dp"
+                android:layout_height="50dp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeMaxTextSize="100sp"
+                app:autoSizeStepGranularity="2sp"
                 android:gravity="center"/>
             <ImageButton
                 android:id="@+id/rightLevel"

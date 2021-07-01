@@ -21,14 +21,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/round_white_btn">
+
                 <TextView
                     android:id="@+id/gameTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="40dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:text="Level 1"
-                    android:layout_weight="1"/>
+                    app:autoSizeMaxTextSize="50sp"
+                    app:autoSizeMinTextSize="30sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform" />
                 <ImageButton
                     android:id="@+id/openMenu"
                     android:background="@drawable/round_button"
@@ -42,11 +46,14 @@
             <TextView
                 android:id="@+id/timerTextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#fff"
+                android:layout_height="30dp"
                 android:gravity="center"
-                android:textSize="20dp"
-                android:text="00:00" />
+                android:text="00:00"
+                android:textColor="#fff"
+                app:autoSizeMaxTextSize="100sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeStepGranularity="2sp"
+                app:autoSizeTextType="uniform" />
         </LinearLayout>
 
 

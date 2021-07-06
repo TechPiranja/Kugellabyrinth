@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -85,8 +86,6 @@ public class GameFieldFragment extends Fragment {
                     String message = new String(msg.getPayload());
                     String[] msgArray = message.split(", ", 3);
 
-
-                    // TODO test if mqtt still works with new modified maze (starting at 1, 0 and not 0,0)
                     if (gameView.user.x != 0 && gameView.user.y != 0 && !isGameRunning && !stopMessage) {
                         listener.sendDataToActivity("Start-Timer");
                         isGameRunning = true;
@@ -118,7 +117,8 @@ public class GameFieldFragment extends Fragment {
         client = MQTTClient.getInstance();
         if  (MQTTClient.usingMQTT){
             stopMessage = false;
-            client.connect();
+            if (client.client == null || !client.client.isConnected())
+                client.connect();
             subscribe("sensor/data");
         }
         else {

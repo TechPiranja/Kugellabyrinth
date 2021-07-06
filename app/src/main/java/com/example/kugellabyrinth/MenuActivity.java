@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 /**
  * This Activity can navigate to the Game and Scoreboard Screen
@@ -98,6 +99,15 @@ public class MenuActivity extends AppCompatActivity{
     private void initButtons(){
         Button startGame = findViewById(R.id.startGame);
         startGame.setOnClickListener(v -> {
+            if (MQTTClient.usingMQTT){
+                client = MQTTClient.getInstance();
+                client.connect();
+                if (!client.client.isConnected()){
+                    Toast.makeText(this, "Verbindung zur MQTT-Broker IP nicht möglich", Toast.LENGTH_SHORT).show();
+                    client.disconnect();
+                    return;
+                }
+            }
             gameScreen.putExtra("ACTION","Start-Game");
             startActivity(gameScreen);
         });
@@ -128,7 +138,6 @@ public class MenuActivity extends AppCompatActivity{
         initButtons();
 
         EditText mqttAddressText = findViewById(R.id.mqttAddress);
-
 
         Switch sensorSwitch = findViewById(R.id.sensorSwitch);
         sensorSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {

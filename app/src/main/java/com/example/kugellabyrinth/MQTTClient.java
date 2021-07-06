@@ -1,8 +1,6 @@
 package com.example.kugellabyrinth;
 
 import android.util.Log;
-
-import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -65,7 +63,7 @@ public class MQTTClient {
             client = new MqttClient(serverUri, clientId, persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
-            Log.d("MQTT", "Connecting to broker: " + serverUri);
+            connOpts.setConnectionTimeout(1);
             client.connect(connOpts);
             Log.d("MQTT", "Connected with broker: " + serverUri);
         } catch (MqttException me) {

@@ -103,6 +103,7 @@ public class MenuActivity extends AppCompatActivity{
                 client = MQTTClient.getInstance();
                 client.connect();
                 if (!client.client.isConnected()){
+                    // if the connection could not be established, a toast notification shows the error and does not resume to the game
                     Toast.makeText(this, "Verbindung zur MQTT-Broker IP nicht möglich", Toast.LENGTH_SHORT).show();
                     client.disconnect();
                     return;
